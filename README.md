@@ -1,2 +1,56 @@
-# react-frontend
-React Frontend for Employee side of HRMS
+# Employee Portal
+
+Repo Details
+----
+This project is an employee portal to manage the new-employee onboarding process. Employees can update personal information, upload required identification and work-authorization documents, and track housing assignments.
+
+Tech Stack
+----------
+- Frontend: React (Vite)
+- State: @reduxjs/toolkit, react-redux
+- HTTP: axios
+- UI: MUI (Material UI) and Tailwind CSS
+- Build / Dev: Vite
+
+Install
+
+```bash
+npm install
+```
+
+Run development server
+
+```bash
+npm run dev
+```
+
+Build for production
+
+```bash
+npm run build
+```
+
+Preview production build
+
+```bash
+npm run preview
+```
+
+Linting
+
+```bash
+npm run lint
+```
+
+Notes on configuration
+----------------------
+- API base URL and any auth tokens should be configured using environment variables (e.g., a `.env` file) read by the app where appropriate.
+- The axios interceptor in `src/api/auth.interceptor.js` centralizes auth header handling and token refresh logic.
+
+Development Workflow
+--------------------
+1. Create a feature branch.
+2. Implement components inside `src/components` and pages in `src/pages`.
+3. Manage shared state in `src/store` using slices and thunks.
+4. Add API calls under `src/api` and use `useAxios` to consume them.
+5. Ensure protected routes use `AuthGuard.jsx`.
