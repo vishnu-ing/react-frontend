@@ -1,0 +1,20 @@
+.onboarding-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+  }
+  
+  .onboarding-content {
+    border: 1px solid #ddd;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .onboarding-content h1 {
+    margin-bottom: 15px;
+  }
+  
+  .onboarding-content p {
+    color: #666;
+  }
