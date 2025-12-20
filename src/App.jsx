@@ -1,13 +1,17 @@
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import OnboardingApplication from "./pages/OnboardingApplication";
 import AuthGuard from "./guards/AuthGuard";
 import { authService } from "./api/authService";
+import PersonalProfile from './pages/PersonalProfile';
+
 
 function App() {
   return (
     <BrowserRouter>
+
       <Routes>
         {/* Public route */}
         <Route path="/login" element={<Login />} />
@@ -21,11 +25,12 @@ function App() {
             </AuthGuard>
           }
         />
+
         <Route
           path="/personal-info"
           element={
             <AuthGuard>
-              <Home />
+              < PersonalProfile/>
             </AuthGuard>
           }
         />
@@ -53,6 +58,7 @@ function App() {
         {/* 404 - redirect to home or login */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
     </BrowserRouter>
   );
 }
