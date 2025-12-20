@@ -5,7 +5,11 @@ import Home from "./pages/Home";
 import OnboardingApplication from "./pages/OnboardingApplication";
 import AuthGuard from "./guards/AuthGuard";
 import { authService } from "./api/authService";
-import PersonalProfile from './pages/PersonalProfile';
+import Layout from "./components/Layout";
+import PersonalProfile from "./pages/PersonalProfile";
+import Logout from "./pages/Logout";
+import RegistrationGuard from "./guards/RegistrationGuard";
+import Registration from "./pages/Registration";
 
 
 function App() {
@@ -17,32 +21,20 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Protected routes */}
-        <Route
-          path="/home"
-          element={
-            <AuthGuard>
-              <Home />
-            </AuthGuard>
-          }
-        />
+        <Route element={<AuthGuard />}>
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/personal-info" element={<PersonalProfile />} />
+            <Route path="/onboarding" element={<OnboardingApplication />} />
+            <Route path="/logout" element={<Logout />} />
+          </Route>
+        </Route>
 
-        <Route
-          path="/personal-info"
-          element={
-            <AuthGuard>
-              < PersonalProfile/>
-            </AuthGuard>
-          }
-        />
-        <Route
-          path="/onboarding"
-          element={
-            <AuthGuard>
-              <OnboardingApplication />
-            </AuthGuard>
-          }
-        />
 
+        {/* Protected routes */}
+        <Route element={<RegistrationGuard />}>
+          <Route path="/registration/:token" element={<Registration />} />
+        </Route>
         {/* Default redirect */}
         <Route
           path="/"

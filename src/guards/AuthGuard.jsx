@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { authService } from "../api/authService";
 
 function AuthGuard({ children }) {
@@ -10,7 +10,7 @@ function AuthGuard({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return <Outlet/>;
 }
 
 export default AuthGuard;

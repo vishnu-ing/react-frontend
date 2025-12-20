@@ -12,25 +12,28 @@ function Home() {
   };
 
   return (
-    <div className="home-container">
-      <div className="home-content">
-        <h1>Welcome, {user?.username}! </h1>
-        <div className="user-info">
-          <p>
-            <strong>Role:</strong> {user?.role}
-          </p>
-          <p>
-            <strong>Email:</strong> {user?.email}
-          </p>
-          <p>
-            <strong>Onboarding Status:</strong> {user?.onboardingStatus}
-          </p>
-        </div>
-        <button onClick={handleLogout} className="logout-button">
-          Logout
-        </button>
-      </div>
-    </div>
+    // <div className="home-container">
+    //   <div className="home-content">
+    //     <h1>Welcome, {user?.username}! </h1>
+    //     <div className="user-info">
+    //       <p>
+    //         <strong>Role:</strong> {user?.role}
+    //       </p>
+    //       <p>
+    //         <strong>Email:</strong> {user?.email}
+    //       </p>
+    //       <p>
+    //         <strong>Onboarding Status:</strong> {user?.onboardingStatus}
+    //       </p>
+    //     </div>
+    //     <button onClick={handleLogout} className="logout-button">
+    //       Logout
+    //     </button>
+    //   </div>
+    // </div>
+    <>
+    <h1>Welcome to home</h1>
+    </>
   );
 }
 

@@ -61,3 +61,12 @@ export const authService = {
     localStorage.removeItem("user");
   },
 };
+
+
+
+//Must implement registration authetnication
+export const RegistrationAuth = {
+  validateRegistrationToken: (token) => {
+    return true
+  }
+}
