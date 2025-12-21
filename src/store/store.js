@@ -1,18 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit'
-// import authReducer from '../features/auth/authSlice'
-// import onboardingReducer from '../features/onboarding/onboardingSlice'
-import userReducer from './userSlice/user.slice'
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./authSlice/auth.slice";
 
 export const store = configureStore({
-    reducer:{
-        user:userReducer
-    }
-//   reducer: {
-//     auth: authReducer,
-//     onboarding: onboardingReducer,
-//   },
-//   devTools: !import.meta.env.PROD,
-//   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-})
+  reducer: {
+    auth: authReducer,
+  },
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+});
 
-export default store
+export default store;
