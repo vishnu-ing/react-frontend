@@ -31,12 +31,13 @@ function Login() {
       authService.setToken(data.token);
       authService.setUser(data.user);
 
+      navigate('/home')
       // AC3: Redirect based on onboarding status
-      if (data.user.onboardingStatus === "Approved") {
-        navigate("/personal-info");
-      } else {
-        navigate("/onboarding");
-      }
+      // if (data.user.onboardingStatus === "Approved") {
+      //   navigate("/personal-info");
+      // } else {
+      //   navigate("/onboarding");
+      // }
     } catch (err) {
       // AC4: Display error message
       setError(err.message || "Login failed. Please try again.");

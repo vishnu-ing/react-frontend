@@ -1,10 +1,8 @@
-const API_BASE_URL = "http://localhost:5000/api";
-
 export const authService = {
   // Login function
   login: async (username, password) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,3 +59,12 @@ export const authService = {
     localStorage.removeItem("user");
   },
 };
+
+
+
+//Must implement registration authetnication
+export const RegistrationAuth = {
+  validateRegistrationToken: (token) => {
+    return true
+  }
+}
