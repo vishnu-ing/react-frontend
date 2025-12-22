@@ -14,13 +14,21 @@ import PersonalProfile from "./pages/PersonalProfile";
 import Logout from "./pages/Logout";
 import Registration from "./pages/Registration";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> cf9081f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
 import Starter from "./components/Starter";
 import HousingDetails from "./components/HousingDetails/HousingDetails";
 import FacilityReportsPage from "./components/FacilityReports/FacilityReports";
 import FacilityReportDetail from "./components/FacilityReportDetail/FacilityReportDetail";
+<<<<<<< HEAD
 import RegistrationGuard from "./guards/RegistrationGuard";
 =======
 >>>>>>> a55fc98 (squashed, everything is working)
+=======
+>>>>>>> 9212e90 (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+>>>>>>> cf9081f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
 
 function App() {
   return (
@@ -50,6 +58,7 @@ function App() {
         </Route>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         {/* Protected routes */}
         <Route element={<RegistrationGuard />}>
           <Route path="/registration/:token" element={<Registration />} />
@@ -58,6 +67,16 @@ function App() {
         {/* Public registration route */}
         <Route path="/register" element={<Registration />} />
 >>>>>>> a55fc98 (squashed, everything is working)
+=======
+        {/* Public registration route */}
+        <Route path="/register" element={<Registration />} />
+=======
+        {/* Protected routes */}
+        <Route element={<RegistrationGuard />}>
+          <Route path="/registration/:token" element={<Registration />} />
+        </Route>
+>>>>>>> 9212e90 (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+>>>>>>> cf9081f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
