@@ -11,6 +11,7 @@ import Starter from "./components/Starter";
 import HousingDetails from "./components/HousingDetails/HousingDetails";
 import FacilityReportsPage from "./components/FacilityReports/FacilityReports";
 import FacilityReportDetail from "./components/FacilityReportDetail/FacilityReportDetail";
+import RegistrationGuard from "./guards/RegistrationGuard";
 
 function App() {
   return (
@@ -39,8 +40,10 @@ function App() {
           </Route>
         </Route>
 
-        {/* Public registration route */}
-        <Route path="/register" element={<Registration />} />
+        {/* Protected routes */}
+        <Route element={<RegistrationGuard />}>
+          <Route path="/registration/:token" element={<Registration />} />
+        </Route>
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
