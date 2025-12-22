@@ -3,9 +3,10 @@ import { fetchPersonalInfo, updatePersonInfo } from "../../api/axiosCustom";
 
 export const getPersonalInfoThunk = createAsyncThunk(
   "user/getPersonalInfo",
-  async (userId, { rejectWithValue }) => {
+  async (_,{ rejectWithValue }) => {
     try {
-      const res = await fetchPersonalInfo(userId);
+      console.log("inside getpersonalinfothunk")
+      const res = await fetchPersonalInfo();
       return res.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -15,9 +16,9 @@ export const getPersonalInfoThunk = createAsyncThunk(
 
 export const updatePersonalInfoThunk = createAsyncThunk(
   "user/updatePersonalInfo",
-  async ({ userId, payload }, { rejectWithValue }) => {
+  async ({ payload }, { rejectWithValue }) => {
     try {
-      const res = await updatePersonInfo(userId, payload);
+      const res = await updatePersonInfo(payload);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -33,7 +34,12 @@ const userSlice = createSlice({
     updating: false,
     error: null,
   },
-  reducers: {},
+  reducers: {resetUser: (state) => {
+    state.personalInfo = null;
+    state.loading = false;
+    state.updating = false;
+    state.error = null;
+  },},
   extraReducers: (builder) => {
     builder
       .addCase(getPersonalInfoThunk.pending, (state) => {
@@ -66,3 +72,4 @@ const userSlice = createSlice({
 
 export default userSlice.reducer;
 
+export const { resetUser } = userSlice.actions;

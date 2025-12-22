@@ -19,14 +19,15 @@ function App() {
       <Routes>
         {/* Public route */}
         <Route path="/login" element={<Login />} />
-
+        <Route path="/logout" element={<Logout />} />
+        
         {/* Protected routes */}
         <Route element={<AuthGuard />}>
           <Route element={<Layout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/personal-info" element={<PersonalProfile />} />
             <Route path="/onboarding" element={<OnboardingApplication />} />
-            <Route path="/logout" element={<Logout />} />
+            
           </Route>
         </Route>
 
