@@ -1,39 +1,62 @@
 import { useNavigate } from "react-router-dom";
-import { authService } from "../api/authService";
-import "./Home.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Container,
+  Box,
+  Paper,
+  Typography,
+  Button,
+  Stack,
+} from "@mui/material";
+import { logout } from "../store/authSlice/auth.slice";
 
 function Home() {
   const navigate = useNavigate();
-  const user = authService.getUser();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    authService.logout();
+    dispatch(logout());
     navigate("/login");
   };
 
   return (
-    // <div className="home-container">
-    //   <div className="home-content">
-    //     <h1>Welcome, {user?.username}! </h1>
-    //     <div className="user-info">
-    //       <p>
-    //         <strong>Role:</strong> {user?.role}
-    //       </p>
-    //       <p>
-    //         <strong>Email:</strong> {user?.email}
-    //       </p>
-    //       <p>
-    //         <strong>Onboarding Status:</strong> {user?.onboardingStatus}
-    //       </p>
-    //     </div>
-    //     <button onClick={handleLogout} className="logout-button">
-    //       Logout
-    //     </button>
-    //   </div>
-    // </div>
-    <>
-    <h1>Welcome to home</h1>
-    </>
+    <Container maxWidth="md">
+      <Box sx={{ mt: 4 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            Welcome, {user?.userName}! 🎉
+          </Typography>
+
+          <Stack spacing={2} sx={{ mt: 3 }}>
+            <Box>
+              <Typography variant="body1">
+                <strong>Role:</strong> {user?.role}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
+                <strong>Email:</strong> {user?.email}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
+                <strong>Onboarding Status:</strong> {user?.onboardingStatus}
+              </Typography>
+            </Box>
+          </Stack>
+
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleLogout}
+            sx={{ mt: 4 }}
+          >
+            Logout
+          </Button>
+        </Paper>
+      </Box>
+    </Container>
   );
 }
 
