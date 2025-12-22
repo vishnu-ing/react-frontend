@@ -7,13 +7,19 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../api/authService";
-
+import { useDispatch } from "react-redux";
+import { resetUser } from "../store/userSlice/user.slice";
+import {logout} from '../store/authSlice/auth.slice'
 function Logout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
+  const dispatch = useDispatch();
+
     const handleConfirm = () => {
-        authService.removeToken();
-        return navigate('/login')
+        
+        dispatch(resetUser())
+        dispatch(logout())
+        navigate('/login', { replace: true })
     }
   return (
     <Dialog
@@ -30,7 +36,7 @@ function Logout() {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => navigate(-1)}>Cancel</Button>
+        <Button onClick={() => navigate('/home')}>Cancel</Button>
         <Button onClick={handleConfirm} autoFocus>
           Confirm
         </Button>

@@ -1,13 +1,10 @@
-
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-
+import { authService } from "../api/authService";
 import {
   getPersonalInfoThunk,
   updatePersonalInfoThunk,
 } from "../store/userSlice/user.slice";
-
-
 
 import EditToolbar from "../components/profile/EditToolbar";
 import NameSection from "../components/profile/NameSection";
@@ -17,34 +14,28 @@ import EmergencyContactsSection from "../components/profile/EmergencyContactsSec
 import DriverLicenseSection from "../components/profile/DriverLicenseSection";
 import VisaDocumentsSection from "../components/profile/VisaDocumentsSection";
 
-
-
 // ===========TEMPORARY. MUST RETRIEVE USERID FROM TOKEN
-const USER_ID = import.meta.env.VITE_EXAMPLE_USERID;
+// const USER_ID = import.meta.env.VITE_EXAMPLE_USERID;
 // ===========TEMPORARY. MUST RETRIEVE USERID FROM TOKEN
-
-
 
 export default function PersonalProfile() {
   const dispatch = useDispatch();
   const { personalInfo, loading, updating } = useSelector((s) => s.user);
-  const [absoluteError,setAbsoluteError] = useState(false)
+  const [absoluteError, setAbsoluteError] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(null);
-  
- 
 
   useEffect(() => {
-    dispatch(getPersonalInfoThunk(USER_ID));
+    dispatch(getPersonalInfoThunk());
   }, [dispatch]);
 
   useEffect(() => {
     setDraft(personalInfo);
   }, [personalInfo]);
 
-  if (loading || !draft) return <p>Loading...</p>;
-
-  
+  if (loading || !draft) {
+    return <p>Loading...</p>;
+  }
 
   const onCancel = () => {
     setDraft(personalInfo);
@@ -52,18 +43,15 @@ export default function PersonalProfile() {
   };
 
   const onSave = () => {
-
-
     dispatch(
       updatePersonalInfoThunk({
-        userId: USER_ID,
         payload: {
-        name: draft.name,
-        address: draft.address,
-        contactInfo: draft.contactInfo,
-        driverLicense: draft.driverlicense, 
-        emergencyContacts: draft.emergencyContacts,
-      },
+          name: draft.name,
+          address: draft.address,
+          contactInfo: draft.contactInfo,
+          driverlicense: draft.driverlicense,
+          emergencyContacts: draft.emergencyContacts,
+        },
       })
     ).then(() => setIsEditing(false));
   };
@@ -76,15 +64,14 @@ export default function PersonalProfile() {
         onCancel={onCancel}
         onSave={onSave}
         loading={updating}
-        absoluteError = {absoluteError}
+        absoluteError={absoluteError}
       />
 
       <NameSection
         data={draft}
         setDraft={setDraft}
         isEditing={isEditing}
-        setAbsoluteError = {setAbsoluteError}
-  
+        setAbsoluteError={setAbsoluteError}
       />
 
       <AddressSection data={draft} setDraft={setDraft} isEditing={isEditing} />
@@ -93,18 +80,18 @@ export default function PersonalProfile() {
         data={draft}
         setDraft={setDraft}
         isEditing={isEditing}
-       setAbsoluteError = {setAbsoluteError}
+        setAbsoluteError={setAbsoluteError}
       />
 
       <EmergencyContactsSection
         data={draft}
         setDraft={setDraft}
         isEditing={isEditing}
-        setAbsoluteError = {setAbsoluteError}
-
+        setAbsoluteError={setAbsoluteError}
       />
-     
+
       <DriverLicenseSection driverLicense={draft.driverlicense} />
       <VisaDocumentsSection visaDocuments={draft.visaDocuments || []} />
     </div>
-  )}
+  );
+}

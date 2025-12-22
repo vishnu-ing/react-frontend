@@ -9,9 +9,13 @@ function AuthGuard({ children }) {
 
   // On mount, check localStorage and rehydrate Redux state
   useEffect(() => {
+    if (!isAuthenticated) {
+      return <Navigate to="/login" replace />;
+    }
     const token = localStorage.getItem("token");
     const userStr = localStorage.getItem("user");
-
+    
+    
     if (token && userStr && !isAuthenticated) {
       try {
         const user = JSON.parse(userStr);
@@ -25,15 +29,15 @@ function AuthGuard({ children }) {
   }, [dispatch, isAuthenticated]);
 
   // Check authentication from Redux store
-  if (!isAuthenticated) {
-    // Also check localStorage as fallback
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return <Navigate to="/login" replace />;
-    }
-  }
+  // if (!isAuthenticated) {
+  //   // Also check localStorage as fallback
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     return <Navigate to="/login" replace />;
+  //   }
+  // }
 
-  return <Outlet/>;
+  return <Outlet />;
 }
 
 export default AuthGuard;

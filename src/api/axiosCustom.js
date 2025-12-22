@@ -1,11 +1,11 @@
 import axiosInstance from './auth.interceptor';
 
-export const fetchPersonalInfo = (userId) => {
-    console.log("userId: ", userId)
-    return axiosInstance.get(`/api/personal-info/${userId}`);
+export const fetchPersonalInfo = () => {
+    console.log("inside fetch")
+    return axiosInstance.get(`/personal-info/user`);
 }
 
-export const updatePersonInfo = (userId, body) => {
-    return axiosInstance.put(`/api/personal-info/${userId}`, body)
+export const updatePersonInfo = ( body) => {
+    return axiosInstance.put(`/personal-info/user`, body)
 
 }
