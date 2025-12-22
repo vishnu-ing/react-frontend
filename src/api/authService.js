@@ -1,23 +1,15 @@
+import axios from "./auth.interceptor";
+
 export const authService = {
   // Login function
   login: async (username, password) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      return data;
+      const response = await axios.post("/auth/login", { username, password });
+      return response.data;
     } catch (error) {
+      if (error?.response?.data) {
+        throw new Error(error.response.data.message || "Login failed");
+      }
       throw error;
     }
   },
@@ -60,11 +52,9 @@ export const authService = {
   },
 };
 
-
-
 //Must implement registration authetnication
 export const RegistrationAuth = {
   validateRegistrationToken: (token) => {
-    return true
-  }
-}
+    return true;
+  },
+};

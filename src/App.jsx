@@ -36,16 +36,7 @@ function App() {
           <Route path="/registration/:token" element={<Registration />} />
         </Route>
         {/* Default redirect */}
-        <Route
-          path="/"
-          element={
-            authService.isAuthenticated() ? (
-              <Navigate to="/home" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
         {/* 404 - redirect to home or login */}
         <Route path="*" element={<Navigate to="/" replace />} />
