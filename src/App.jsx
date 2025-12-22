@@ -23,12 +23,19 @@ import HousingDetails from "./components/HousingDetails/HousingDetails";
 import FacilityReportsPage from "./components/FacilityReports/FacilityReports";
 import FacilityReportDetail from "./components/FacilityReportDetail/FacilityReportDetail";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import RegistrationGuard from "./guards/RegistrationGuard";
 =======
 >>>>>>> a55fc98 (squashed, everything is working)
 =======
 >>>>>>> 9212e90 (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
 >>>>>>> cf9081f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+=======
+>>>>>>> 9212e90 (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+=======
+import RegistrationGuard from "./guards/RegistrationGuard";
+>>>>>>> e4c3a6f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+>>>>>>> 83516ec (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
 
 function App() {
   return (
@@ -59,6 +66,7 @@ function App() {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         {/* Protected routes */}
         <Route element={<RegistrationGuard />}>
           <Route path="/registration/:token" element={<Registration />} />
@@ -68,15 +76,25 @@ function App() {
         <Route path="/register" element={<Registration />} />
 >>>>>>> a55fc98 (squashed, everything is working)
 =======
+=======
+>>>>>>> 83516ec (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
         {/* Public registration route */}
         <Route path="/register" element={<Registration />} />
 =======
+=======
+>>>>>>> e4c3a6f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
         {/* Protected routes */}
         <Route element={<RegistrationGuard />}>
           <Route path="/registration/:token" element={<Registration />} />
         </Route>
+<<<<<<< HEAD
 >>>>>>> 9212e90 (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+<<<<<<< HEAD
 >>>>>>> cf9081f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+=======
+=======
+>>>>>>> e4c3a6f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+>>>>>>> 83516ec (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
