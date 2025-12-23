@@ -12,6 +12,7 @@ import {
   IconButton,
   InputAdornment,
   Snackbar,
+  Popover,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "../api/auth.interceptor";
@@ -31,13 +32,102 @@ function Registration() {
   const [tokenValid, setTokenValid] = useState(false);
   const navigatedRef = useRef(false);
 
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [usernameAnchor, setUsernameAnchor] = useState(null);
+  const [passwordAnchor, setPasswordAnchor] = useState(null);
+  const [confirmPasswordAnchor, setConfirmPasswordAnchor] = useState(null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { loading, error, registrationSuccess, registrationMessage } =
     useSelector((state) => state.auth);
 
-  // Validate token on mount
+  const validateUsername = (value) => {
+    if (value.length === 0) return "";
+    if (value.length < 6) return "Username must be at least 6 characters";
+    if (value.length > 12) return "Username must be at most 12 characters";
+    if (!/^[a-zA-Z0-9]+$/.test(value)) {
+      return "Username must be alphanumeric (letters and numbers only)";
+    }
+    return "";
+  };
+
+  const validatePassword = (value) => {
+    if (value.length === 0) return "";
+    if (!/[a-z]/.test(value)) return "Password must contain a lowercase letter";
+    if (!/[A-Z]/.test(value))
+      return "Password must contain an uppercase letter";
+    if (!/[0-9]/.test(value)) return "Password must contain a number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+      return "Password must contain a special character";
+    }
+    if (value.length < 8) return "Password must be at least 8 characters";
+    return "";
+  };
+
+  const validateConfirmPassword = (value, passwordValue) => {
+    if (value.length === 0) return "";
+    if (value !== passwordValue) return "Passwords do not match";
+    return "";
+  };
+
+  const handleUsernameChange = (e) => {
+    const value = e.target.value;
+    const element = e.currentTarget;
+
+    setUsername(value);
+
+    const error = validateUsername(value);
+    setUsernameError(error);
+
+    if (error && !usernameAnchor) {
+      setUsernameAnchor(element);
+    } else if (!error) {
+      setUsernameAnchor(null);
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    const element = e.currentTarget;
+
+    setPassword(value);
+
+    const error = validatePassword(value);
+    setPasswordError(error);
+
+    if (error && !passwordAnchor) {
+      setPasswordAnchor(element);
+    } else if (!error) {
+      setPasswordAnchor(null);
+    }
+
+    // Also revalidate confirm password
+    if (confirmPassword) {
+      const confirmError = validateConfirmPassword(confirmPassword, value);
+      setConfirmPasswordError(confirmError);
+    }
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value;
+    const element = e.currentTarget;
+
+    setConfirmPassword(value);
+
+    const error = validateConfirmPassword(value, password);
+    setConfirmPasswordError(error);
+
+    if (error && !confirmPasswordAnchor) {
+      setConfirmPasswordAnchor(element);
+    } else if (!error) {
+      setConfirmPasswordAnchor(null);
+    }
+  };
+
   useEffect(() => {
     if (!token) {
       dispatch(setError("Registration link is invalid or missing token"));
@@ -45,20 +135,18 @@ function Registration() {
       return;
     }
 
-    // FIX #1: Call correct endpoint - /auth/register with query param
     axios
       .get("/auth/register", { params: { token } })
       .then((res) => {
         const emailFromServer = res?.data?.email;
         if (emailFromServer) {
           setEmail(emailFromServer);
-          setTokenValid(true); // FIX #2: Mark token as valid
+          setTokenValid(true);
         } else {
           throw new Error("Invalid registration token");
         }
       })
       .catch((e) => {
-        // FIX #2: Redirect on invalid token
         const msg =
           e?.response?.data?.message || e.message || "Token validation failed";
         dispatch(setError(msg));
@@ -66,7 +154,6 @@ function Registration() {
       });
   }, [token, dispatch, navigate]);
 
-  // Redirect after successful registration
   useEffect(() => {
     if (registrationSuccess && !navigatedRef.current) {
       navigatedRef.current = true;
@@ -77,7 +164,6 @@ function Registration() {
     }
   }, [registrationSuccess, navigate]);
 
-  // Clear errors on unmount
   useEffect(() => {
     return () => {
       dispatch(clearError());
@@ -95,6 +181,12 @@ function Registration() {
       dispatch(setError("Please fill in all fields"));
       return;
     }
+
+    if (usernameError || passwordError || confirmPasswordError) {
+      dispatch(setError("Please fix validation errors before submitting"));
+      return;
+    }
+
     if (password !== confirmPassword) {
       dispatch(setError("Passwords do not match"));
       return;
@@ -102,7 +194,6 @@ function Registration() {
     dispatch(registerUser({ username, email, password, token }));
   };
 
-  // Don't show form until token is validated
   if (!tokenValid) {
     return (
       <Container maxWidth="sm">
@@ -140,14 +231,28 @@ function Registration() {
               fullWidth
               label="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={handleUsernameChange}
               margin="normal"
               required
               disabled={loading}
               autoComplete="username"
+              error={Boolean(usernameError)}
             />
 
-            {/* FIX #3: Added onChange handler to make email editable */}
+            <Popover
+              open={Boolean(usernameAnchor && usernameError)}
+              anchorEl={usernameAnchor}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              disableAutoFocus
+              disableEnforceFocus
+              sx={{ pointerEvents: "none" }}
+            >
+              <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
+                {usernameError}
+              </Alert>
+            </Popover>
+
             <TextField
               fullWidth
               label="Email"
@@ -164,11 +269,12 @@ function Registration() {
               label="Password"
               type={showPassword ? "text" : "password"}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               margin="normal"
               required
               disabled={loading}
               autoComplete="new-password"
+              error={Boolean(passwordError)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -184,16 +290,31 @@ function Registration() {
               }}
             />
 
+            <Popover
+              open={Boolean(passwordAnchor && passwordError)}
+              anchorEl={passwordAnchor}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              disableAutoFocus
+              disableEnforceFocus
+              sx={{ pointerEvents: "none" }}
+            >
+              <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
+                {passwordError}
+              </Alert>
+            </Popover>
+
             <TextField
               fullWidth
               label="Confirm Password"
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               margin="normal"
               required
               disabled={loading}
               autoComplete="new-password"
+              error={Boolean(confirmPasswordError)}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -211,6 +332,20 @@ function Registration() {
               }}
             />
 
+            <Popover
+              open={Boolean(confirmPasswordAnchor && confirmPasswordError)}
+              anchorEl={confirmPasswordAnchor}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              disableAutoFocus
+              disableEnforceFocus
+              sx={{ pointerEvents: "none" }}
+            >
+              <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
+                {confirmPasswordError}
+              </Alert>
+            </Popover>
+
             {error && (
               <Alert severity="error" sx={{ mt: 2 }}>
                 {error}
@@ -222,7 +357,13 @@ function Registration() {
               fullWidth
               variant="contained"
               size="large"
-              disabled={loading || !email}
+              disabled={
+                loading ||
+                !email ||
+                Boolean(usernameError) ||
+                Boolean(passwordError) ||
+                Boolean(confirmPasswordError)
+              }
               sx={{ mt: 3, mb: 2 }}
             >
               {loading ? "Registering..." : "Register"}
