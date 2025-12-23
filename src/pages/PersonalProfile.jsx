@@ -6,6 +6,7 @@ import {
   updatePersonalInfoThunk,
 } from "../store/userSlice/user.slice";
 
+// import { fetchProfilePicture, uploadProfilePicture } from "../api/axiosCustom";
 import { uploadProfilePicture } from "../api/axiosCustom";
 import EditToolbar from "../components/profile/EditToolbar";
 import NameSection from "../components/profile/NameSection";
@@ -49,15 +50,13 @@ export default function PersonalProfile() {
       try {
         let updatedName = { ...draft.name };
         const file = draft?.name?.profilePictureFile;
-        console.log('File:', file);
         if (file && file instanceof File) {
           const res = await uploadProfilePicture(file);
           const url = res.data?.url;
           if (url) {
-            updatedName = { ...updatedName, profilePicture: url };
+            updatedName = { ...updatedName, profilePicture: `${url}?v=${Date.now()}` };
           }
         }
-
         await dispatch(
           updatePersonalInfoThunk({
             payload: {
@@ -69,9 +68,18 @@ export default function PersonalProfile() {
             },
           })
         );
+        setDraft((prev) => ({
+          ...prev,
+          name: {
+            ...updatedName,
+          },
+        }));
+
+        await dispatch(getPersonalInfoThunk()).unwrap();
+
         setIsEditing(false);
       } catch (err) {
-        console.error('Save error:', err);
+        console.error("Save error:", err);
       }
     };
 

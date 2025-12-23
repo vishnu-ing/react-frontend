@@ -4,7 +4,7 @@
 // looks into /public folder by default
 export function resolveFileUrl(fileUrl) {
   if (!fileUrl) return "";
-
+  // console.log("FileURL: ", fileUrl)
   if (fileUrl.startsWith("http")) return fileUrl;
   return `/assets/${fileUrl}`;
 }
