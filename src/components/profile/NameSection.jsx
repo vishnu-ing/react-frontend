@@ -1,4 +1,3 @@
-
 import {
   Avatar,
   Button,
@@ -14,7 +13,12 @@ const nameRegex = /^[A-Za-z\s]*$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ssnFullRegex = /^\d{3}-\d{2}-\d{4}$/;
 
-export default function NameSection({ data, setDraft, isEditing,setAbsoluteError }) {
+export default function NameSection({
+  data,
+  setDraft,
+  isEditing,
+  setAbsoluteError,
+}) {
   const name = data.name || {};
 
   const update = (key, value) => {
@@ -28,41 +32,42 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
   const handleName = (key) => (e) => {
     const val = e.target.value;
     if (!nameRegex.test(val)) {
-      setAbsoluteError(true)
+      setAbsoluteError(true);
       update(key, val);
       return;
     }
-    setAbsoluteError(false)
+    setAbsoluteError(false);
     update(key, val);
   };
 
   const handleSSN = (e) => {
     const digits = e.target.value.replace(/\D/g, "").slice(0, 9);
-    
+
     let formatted = digits;
     if (digits.length > 5) {
-      formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+      formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(
+        5
+      )}`;
     } else if (digits.length > 3) {
       formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
     }
-    if(!ssnFullRegex.test(formatted)){
-      setAbsoluteError(true)
+    if (!ssnFullRegex.test(formatted)) {
+      setAbsoluteError(true);
       update("ssn", formatted);
       return;
     }
-    setAbsoluteError(false)
+    setAbsoluteError(false);
     update("ssn", formatted);
   };
 
-
-   const handleEmail = (key) => (e) => {
+  const handleEmail = (key) => (e) => {
     const val = e.target.value;
     if (!emailRegex.test(val)) {
-      setAbsoluteError(true)
-       update(key, val);
+      setAbsoluteError(true);
+      update(key, val);
       return;
     }
-    setAbsoluteError(false)
+    setAbsoluteError(false);
     update(key, val);
   };
 
@@ -91,7 +96,8 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
                   const file = e.target.files?.[0];
                   if (!file) return;
                   // keep the File object so parent can upload it on Save
-                  update("profilePictureFile", file);}}
+                  update("profilePictureFile", file);
+                }}
               />
             </Button>
           )}
@@ -152,9 +158,7 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
           onChange={handleEmail("email")}
           error={!!name.email && !emailRegex.test(name.email)}
           helperText={
-            !!name.email && !emailRegex.test(name.email)
-              ? "Invalid email"
-              : ""
+            !!name.email && !emailRegex.test(name.email) ? "Invalid email" : ""
           }
           fullWidth
         />
@@ -188,4 +192,5 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
         </Stack>
       </Stack>
     </Paper>
-  )}
+  );
+}

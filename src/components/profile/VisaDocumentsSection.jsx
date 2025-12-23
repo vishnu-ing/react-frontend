@@ -3,25 +3,61 @@ import {
   Typography,
   Stack,
   TextField,
-  Chip,
   Button,
   Box,
+  MenuItem,
 } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DownloadIcon from "@mui/icons-material/Download";
 import { resolveFileUrl } from "../../utils/fileUrl";
-export default function VisaDocumentsSection({ visaDocuments = [] }) {
+
+const VISA_TYPES = [
+  "OPT Receipt",
+  "EAD Card",
+  "I-20",
+  "I-94",
+  "I-983",
+  "Other",
+];
+
+export default function VisaDocumentsSection({
+  visaDocuments = [],
+  data,
+  setDraft,
+  isEditing,
+  setAbsoluteError,
+}) {
   if (!visaDocuments.length) return null;
 
-  const statusColor = (status) => {
-    switch (status) {
-      case "Approved":
-        return "success";
-      case "Rejected":
-        return "error";
-      default:
-        return "warning";
+  // ===== update helper (index-aware) =====
+  const updateDoc = (idx, key, value) => {
+    const updated = [...visaDocuments];
+    updated[idx] = {
+      ...updated[idx],
+      [key]: value,
+    };
+
+    setDraft({
+      ...data,
+      visaDocuments: updated,
+    });
+  };
+
+  // ===== handlers =====
+  const handleType = (idx) => (e) => {
+    const val = e.target.value;
+    if (!typeRegex.test(val)) {
+      setAbsoluteError(true);
+      updateDoc(idx, "type", val);
+      return;
     }
+    setAbsoluteError(false);
+    updateDoc(idx, "type", val);
+  };
+
+  const handleDate = (idx, key) => (e) => {
+    setAbsoluteError(false);
+    updateDoc(idx, key, e.target.value);
   };
 
   return (
@@ -33,7 +69,7 @@ export default function VisaDocumentsSection({ visaDocuments = [] }) {
       <Stack spacing={3}>
         {visaDocuments.map((doc, idx) => (
           <Box
-            key={idx}
+            key={doc._id || idx}
             sx={{
               border: "1px solid #e0e0e0",
               borderRadius: 1,
@@ -41,39 +77,68 @@ export default function VisaDocumentsSection({ visaDocuments = [] }) {
             }}
           >
             <Stack spacing={2}>
+              {/* ===== Editable fields ===== */}
               <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                 <TextField
+                  select
                   label="Document Type"
-                  value={doc.type}
-                  disabled
+                  value={doc.type || ""}
+                  disabled={!isEditing}
+                  onChange={(e) => updateDoc(idx, "type", e.target.value)}
                   fullWidth
-                />
+                >
+                  {VISA_TYPES.map((t) => (
+                    <MenuItem key={t} value={t}>
+                      {t}
+                    </MenuItem>
+                  ))}
+                </TextField>
 
                 <TextField
                   label="Start Date"
-                  value={doc.startDate}
-                  disabled
+                  type="date"
+                  value={doc.startDate || ""}
+                  disabled={!isEditing}
+                  onChange={handleDate(idx, "startDate")}
+                  InputLabelProps={{ shrink: true }}
                   fullWidth
                 />
 
                 <TextField
                   label="End Date"
-                  value={doc.endDate}
-                  disabled
+                  type="date"
+                  value={doc.endDate || ""}
+                  disabled={!isEditing}
+                  onChange={handleDate(idx, "endDate")}
+                  InputLabelProps={{ shrink: true }}
                   fullWidth
                 />
               </Stack>
 
+              {/* ===== File upload + actions ===== */}
               <Stack
                 direction="row"
                 spacing={2}
                 alignItems="center"
                 justifyContent="space-between"
               >
-                
+                {isEditing && (
+                  <Button component="label" variant="outlined">
+                    Upload
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/*,application/pdf"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        updateDoc(idx, "fileUrl", file); 
+                      }}
+                    />
+                  </Button>
+                )}
 
                 <Stack direction="row" spacing={2}>
-                  {/* Open */}
                   <Button
                     size="small"
                     variant="outlined"
@@ -85,7 +150,6 @@ export default function VisaDocumentsSection({ visaDocuments = [] }) {
                     Open
                   </Button>
 
-                  {/* Download */}
                   <Button
                     size="small"
                     variant="contained"

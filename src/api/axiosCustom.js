@@ -16,3 +16,20 @@ export const uploadProfilePicture = (file) => {
         headers: { 'Content-Type': 'multipart/form-data' }
     });
 }
+
+export const uploadDriverLicense = (file) => {
+    const form = new FormData();
+    form.append('file', file);
+    return axiosInstance.post('/upload/driver-license', form, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+}
+
+export const uploadVisaDocument = (file,visaDocId) => {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('visaDocId',visaDocId)
+    return axiosInstance.post('/upload/visa-documents', form, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+}

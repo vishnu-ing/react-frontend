@@ -6,8 +6,11 @@ import {
   updatePersonalInfoThunk,
 } from "../store/userSlice/user.slice";
 
-// import { fetchProfilePicture, uploadProfilePicture } from "../api/axiosCustom";
-import { uploadProfilePicture } from "../api/axiosCustom";
+import {
+  uploadDriverLicense,
+  uploadProfilePicture,
+  uploadVisaDocument,
+} from "../api/axiosCustom";
 import EditToolbar from "../components/profile/EditToolbar";
 import NameSection from "../components/profile/NameSection";
 import AddressSection from "../components/profile/AddressSection";
@@ -15,10 +18,6 @@ import ContactInfoSection from "../components/profile/ContactInfoSection";
 import EmergencyContactsSection from "../components/profile/EmergencyContactsSection";
 import DriverLicenseSection from "../components/profile/DriverLicenseSection";
 import VisaDocumentsSection from "../components/profile/VisaDocumentsSection";
-
-// ===========TEMPORARY. MUST RETRIEVE USERID FROM TOKEN
-// const USER_ID = import.meta.env.VITE_EXAMPLE_USERID;
-// ===========TEMPORARY. MUST RETRIEVE USERID FROM TOKEN
 
 export default function PersonalProfile() {
   const dispatch = useDispatch();
@@ -45,26 +44,67 @@ export default function PersonalProfile() {
   };
 
   const onSave = () => {
-    // If a new file was selected, upload it first to get S3 URL
+    if (absoluteError) {
+      console.warn("Cannot save when there are errors!");
+      return;
+    }
     const doSave = async () => {
       try {
+        //      PROFILE PICTURE S3
         let updatedName = { ...draft.name };
-        const file = draft?.name?.profilePictureFile;
+        let file = draft?.name?.profilePictureFile;
         if (file && file instanceof File) {
-          const res = await uploadProfilePicture(file);
-          const url = res.data?.url;
+          let res = await uploadProfilePicture(file);
+          let url = res.data?.url;
           if (url) {
-            updatedName = { ...updatedName, profilePicture: `${url}?v=${Date.now()}` };
+            updatedName = {
+              ...updatedName,
+              profilePicture: `${url}?v=${Date.now()}`,
+            };
           }
         }
+
+        //      DRIVER LICENSE S3
+        let updatedDriverLicense = { ...draft.driverlicense };
+        const driverFile = draft?.driverlicense?.fileUrl;
+        if (driverFile && driverFile instanceof File) {
+          let res = await uploadDriverLicense(driverFile);
+          let url = res.data?.url;
+          if (url) {
+            updatedDriverLicense = {
+              ...updatedDriverLicense,
+              fileUrl: `${url}?v=${Date.now()}`,
+            };
+          }
+        }
+        //      Visa Documents
+        let updatedVisaDocuments = [...draft.visaDocuments];
+
+        for (let i = 0; i < updatedVisaDocuments.length; i++) {
+          const doc = updatedVisaDocuments[i];
+
+          if (doc.fileUrl instanceof File) {
+            const res = await uploadVisaDocument(doc.fileUrl, doc._id);
+            const url = res.data?.url;
+            const key = res.data?.key;
+
+            updatedVisaDocuments[i] = {
+              ...doc,
+              fileUrl: `${url}?v=${Date.now()}`,
+              fileKey: key, 
+            };
+          }
+        }
+
         await dispatch(
           updatePersonalInfoThunk({
             payload: {
               name: updatedName,
               address: draft.address,
               contactInfo: draft.contactInfo,
-              driverlicense: draft.driverlicense,
+              driverlicense: updatedDriverLicense,
               emergencyContacts: draft.emergencyContacts,
+              visaDocuments: updatedVisaDocuments,
             },
           })
         );
@@ -73,6 +113,7 @@ export default function PersonalProfile() {
           name: {
             ...updatedName,
           },
+          driverlicense: updatedDriverLicense,
         }));
 
         await dispatch(getPersonalInfoThunk()).unwrap();
@@ -120,8 +161,19 @@ export default function PersonalProfile() {
         setAbsoluteError={setAbsoluteError}
       />
 
-      <DriverLicenseSection driverLicense={draft.driverlicense} />
-      <VisaDocumentsSection visaDocuments={draft.visaDocuments || []} />
+      <DriverLicenseSection
+        data={draft}
+        setDraft={setDraft}
+        driverLicense={draft.driverlicense}
+        isEditing={isEditing}
+      />
+      <VisaDocumentsSection
+        data={draft}
+        setDraft={setDraft}
+        isEditing={isEditing}
+        setAbsoluteError={setAbsoluteError}
+        visaDocuments={draft.visaDocuments || []}
+      />
     </div>
   );
 }
