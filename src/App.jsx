@@ -3,15 +3,24 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import OnboardingApplication from "./pages/OnboardingApplication";
 import AuthGuard from "./guards/AuthGuard";
+<<<<<<< HEAD
+=======
+import { authService } from "./api/authService";
+import './App.css'
+import Starter from './components/Starter';
+>>>>>>> a55fc98 (squashed, everything is working)
 import Layout from "./components/Layout";
 import PersonalProfile from "./pages/PersonalProfile";
 import Logout from "./pages/Logout";
 import Registration from "./pages/Registration";
+<<<<<<< HEAD
 import Starter from "./components/Starter";
 import HousingDetails from "./components/HousingDetails/HousingDetails";
 import FacilityReportsPage from "./components/FacilityReports/FacilityReports";
 import FacilityReportDetail from "./components/FacilityReportDetail/FacilityReportDetail";
 import RegistrationGuard from "./guards/RegistrationGuard";
+=======
+>>>>>>> a55fc98 (squashed, everything is working)
 
 function App() {
   return (
@@ -40,10 +49,15 @@ function App() {
           </Route>
         </Route>
 
+<<<<<<< HEAD
         {/* Protected routes */}
         <Route element={<RegistrationGuard />}>
           <Route path="/registration/:token" element={<Registration />} />
         </Route>
+=======
+        {/* Public registration route */}
+        <Route path="/register" element={<Registration />} />
+>>>>>>> a55fc98 (squashed, everything is working)
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
