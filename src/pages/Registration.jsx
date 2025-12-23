@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Box,
@@ -13,29 +13,31 @@ import {
   InputAdornment,
   Snackbar,
   Popover,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import axios from "../api/auth.interceptor";
-import { registerUser } from "../store/authSlice/auth.thunks";
-import { clearError, setError } from "../store/authSlice/auth.slice";
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import axios from '../api/auth.interceptor';
+import { registerUser } from '../store/authSlice/auth.thunks';
+import { clearError, setError } from '../store/authSlice/auth.slice';
 
 function Registration() {
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token") || "";
+  const token = searchParams.get('token') || '';
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [tokenValid, setTokenValid] = useState(false);
   const navigatedRef = useRef(false);
 
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [usernameAnchor, setUsernameAnchor] = useState(null);
+  const [emailAnchor, setEmailAnchor] = useState(null);
   const [passwordAnchor, setPasswordAnchor] = useState(null);
   const [confirmPasswordAnchor, setConfirmPasswordAnchor] = useState(null);
 
@@ -46,32 +48,42 @@ function Registration() {
     useSelector((state) => state.auth);
 
   const validateUsername = (value) => {
-    if (value.length === 0) return "";
-    if (value.length < 6) return "Username must be at least 6 characters";
-    if (value.length > 12) return "Username must be at most 12 characters";
+    if (value.length === 0) return '';
     if (!/^[a-zA-Z0-9]+$/.test(value)) {
-      return "Username must be alphanumeric (letters and numbers only)";
+      return 'Special characters are not allowed. Username must be alphanumeric (letters and numbers only)';
     }
-    return "";
+    if (value.length < 6) return 'Username must be at least 6 characters';
+    if (value.length > 12) return 'Username must be at most 12 characters';
+    return '';
+  };
+
+  const validateEmail = (value) => {
+    if (value.length === 0) return '';
+    // Check for basic email format: text@text.text
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return 'Please enter a valid email address';
+    }
+    return '';
   };
 
   const validatePassword = (value) => {
-    if (value.length === 0) return "";
-    if (!/[a-z]/.test(value)) return "Password must contain a lowercase letter";
+    if (value.length === 0) return '';
+    if (!/[a-z]/.test(value)) return 'Password must contain a lowercase letter';
     if (!/[A-Z]/.test(value))
-      return "Password must contain an uppercase letter";
-    if (!/[0-9]/.test(value)) return "Password must contain a number";
+      return 'Password must contain an uppercase letter';
+    if (!/[0-9]/.test(value)) return 'Password must contain a number';
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Password must contain a special character";
+      return 'Password must contain a special character';
     }
-    if (value.length < 8) return "Password must be at least 8 characters";
-    return "";
+    if (value.length < 8) return 'Password must be at least 8 characters';
+    return '';
   };
 
   const validateConfirmPassword = (value, passwordValue) => {
-    if (value.length === 0) return "";
-    if (value !== passwordValue) return "Passwords do not match";
-    return "";
+    if (value.length === 0) return '';
+    if (value !== passwordValue) return 'Passwords do not match';
+    return '';
   };
 
   const handleUsernameChange = (e) => {
@@ -87,6 +99,22 @@ function Registration() {
       setUsernameAnchor(element);
     } else if (!error) {
       setUsernameAnchor(null);
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    const element = e.currentTarget;
+
+    setEmail(value);
+
+    const error = validateEmail(value);
+    setEmailError(error);
+
+    if (error && !emailAnchor) {
+      setEmailAnchor(element);
+    } else if (!error) {
+      setEmailAnchor(null);
     }
   };
 
@@ -130,27 +158,27 @@ function Registration() {
 
   useEffect(() => {
     if (!token) {
-      dispatch(setError("Registration link is invalid or missing token"));
-      navigate("/login", { replace: true });
+      dispatch(setError('Registration link is invalid or missing token'));
+      navigate('/login', { replace: true });
       return;
     }
 
     axios
-      .get("/auth/register", { params: { token } })
+      .get('/auth/register', { params: { token } })
       .then((res) => {
         const emailFromServer = res?.data?.email;
         if (emailFromServer) {
           setEmail(emailFromServer);
           setTokenValid(true);
         } else {
-          throw new Error("Invalid registration token");
+          throw new Error('Invalid registration token');
         }
       })
       .catch((e) => {
         const msg =
-          e?.response?.data?.message || e.message || "Token validation failed";
+          e?.response?.data?.message || e.message || 'Token validation failed';
         dispatch(setError(msg));
-        navigate("/login", { replace: true });
+        navigate('/login', { replace: true });
       });
   }, [token, dispatch, navigate]);
 
@@ -158,7 +186,7 @@ function Registration() {
     if (registrationSuccess && !navigatedRef.current) {
       navigatedRef.current = true;
       const timer = setTimeout(() => {
-        navigate("/login", { replace: true });
+        navigate('/login', { replace: true });
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -178,17 +206,17 @@ function Registration() {
       !confirmPassword.trim() ||
       !email.trim()
     ) {
-      dispatch(setError("Please fill in all fields"));
+      dispatch(setError('Please fill in all fields'));
       return;
     }
 
-    if (usernameError || passwordError || confirmPasswordError) {
-      dispatch(setError("Please fix validation errors before submitting"));
+    if (usernameError || emailError || passwordError || confirmPasswordError) {
+      dispatch(setError('Please fix validation errors before submitting'));
       return;
     }
 
     if (password !== confirmPassword) {
-      dispatch(setError("Passwords do not match"));
+      dispatch(setError('Passwords do not match'));
       return;
     }
     dispatch(registerUser({ username, email, password, token }));
@@ -199,10 +227,10 @@ function Registration() {
       <Container maxWidth="sm">
         <Box
           sx={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <Typography>Validating registration token...</Typography>
@@ -215,13 +243,13 @@ function Registration() {
     <Container maxWidth="sm">
       <Box
         sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
+        <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
           <Typography variant="h4" component="h1" gutterBottom align="center">
             Employee Registration
           </Typography>
@@ -242,11 +270,11 @@ function Registration() {
             <Popover
               open={Boolean(usernameAnchor && usernameError)}
               anchorEl={usernameAnchor}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               disableAutoFocus
               disableEnforceFocus
-              sx={{ pointerEvents: "none" }}
+              sx={{ pointerEvents: 'none' }}
             >
               <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
                 {usernameError}
@@ -257,17 +285,32 @@ function Registration() {
               fullWidth
               label="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               margin="normal"
               required
               autoComplete="email"
               disabled={loading}
+              error={Boolean(emailError)}
             />
+
+            <Popover
+              open={Boolean(emailAnchor && emailError)}
+              anchorEl={emailAnchor}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              disableAutoFocus
+              disableEnforceFocus
+              sx={{ pointerEvents: 'none' }}
+            >
+              <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
+                {emailError}
+              </Alert>
+            </Popover>
 
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={handlePasswordChange}
               margin="normal"
@@ -293,11 +336,11 @@ function Registration() {
             <Popover
               open={Boolean(passwordAnchor && passwordError)}
               anchorEl={passwordAnchor}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               disableAutoFocus
               disableEnforceFocus
-              sx={{ pointerEvents: "none" }}
+              sx={{ pointerEvents: 'none' }}
             >
               <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
                 {passwordError}
@@ -307,7 +350,7 @@ function Registration() {
             <TextField
               fullWidth
               label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
               margin="normal"
@@ -335,11 +378,11 @@ function Registration() {
             <Popover
               open={Boolean(confirmPasswordAnchor && confirmPasswordError)}
               anchorEl={confirmPasswordAnchor}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               disableAutoFocus
               disableEnforceFocus
-              sx={{ pointerEvents: "none" }}
+              sx={{ pointerEvents: 'none' }}
             >
               <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
                 {confirmPasswordError}
@@ -361,12 +404,13 @@ function Registration() {
                 loading ||
                 !email ||
                 Boolean(usernameError) ||
+                Boolean(emailError) ||
                 Boolean(passwordError) ||
                 Boolean(confirmPasswordError)
               }
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? "Registering..." : "Register"}
+              {loading ? 'Registering...' : 'Register'}
             </Button>
 
             <Snackbar
@@ -374,7 +418,7 @@ function Registration() {
               autoHideDuration={2000}
               message={
                 registrationMessage ||
-                "Registration successful! Redirecting to login..."
+                'Registration successful! Redirecting to login...'
               }
             />
           </Box>

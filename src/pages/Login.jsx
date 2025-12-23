@@ -36,11 +36,11 @@ function Login() {
 
   const validateUsername = (value) => {
     if (value.length === 0) return '';
+    if (!/^[a-zA-Z0-9]+$/.test(value)) {
+      return 'Special characters are not allowed. Username must be alphanumeric (letters and numbers only)';
+    }
     if (value.length < 6) return 'Username must be at least 6 characters';
     if (value.length > 12) return 'Username must be at most 12 characters';
-    if (!/^[a-zA-Z0-9]+$/.test(value)) {
-      return 'Username must be alphanumeric (letters and numbers only)';
-    }
     return '';
   };
 
