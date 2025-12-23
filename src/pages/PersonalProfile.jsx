@@ -6,6 +6,7 @@ import {
   updatePersonalInfoThunk,
 } from "../store/userSlice/user.slice";
 
+import { uploadProfilePicture } from "../api/axiosCustom";
 import EditToolbar from "../components/profile/EditToolbar";
 import NameSection from "../components/profile/NameSection";
 import AddressSection from "../components/profile/AddressSection";
@@ -43,17 +44,38 @@ export default function PersonalProfile() {
   };
 
   const onSave = () => {
-    dispatch(
-      updatePersonalInfoThunk({
-        payload: {
-          name: draft.name,
-          address: draft.address,
-          contactInfo: draft.contactInfo,
-          driverlicense: draft.driverlicense,
-          emergencyContacts: draft.emergencyContacts,
-        },
-      })
-    ).then(() => setIsEditing(false));
+    // If a new file was selected, upload it first to get S3 URL
+    const doSave = async () => {
+      try {
+        let updatedName = { ...draft.name };
+        const file = draft?.name?.profilePictureFile;
+        console.log('File:', file);
+        if (file && file instanceof File) {
+          const res = await uploadProfilePicture(file);
+          const url = res.data?.url;
+          if (url) {
+            updatedName = { ...updatedName, profilePicture: url };
+          }
+        }
+
+        await dispatch(
+          updatePersonalInfoThunk({
+            payload: {
+              name: updatedName,
+              address: draft.address,
+              contactInfo: draft.contactInfo,
+              driverlicense: draft.driverlicense,
+              emergencyContacts: draft.emergencyContacts,
+            },
+          })
+        );
+        setIsEditing(false);
+      } catch (err) {
+        console.error('Save error:', err);
+      }
+    };
+
+    doSave();
   };
 
   return (
