@@ -17,3 +17,23 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+// Register thunk
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async ({ username, email, password, token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/auth/register", {
+        username,
+        email,
+        password,
+        token,
+      });
+      return response.data;
+    } catch (error) {
+      const message =
+        error?.response?.data?.message || error.message || "Network error";
+      return rejectWithValue(message);
+    }
+  }
+);

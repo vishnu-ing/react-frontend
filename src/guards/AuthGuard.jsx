@@ -2,20 +2,17 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setCredentials } from "../store/authSlice/auth.slice";
+import { useState } from "react";
 
 function AuthGuard({ children }) {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const [isChecking, setIsChecking] = useState(true);
 
   // On mount, check localStorage and rehydrate Redux state
   useEffect(() => {
-    if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
-    }
     const token = localStorage.getItem("token");
     const userStr = localStorage.getItem("user");
-    
-    
     if (token && userStr && !isAuthenticated) {
       try {
         const user = JSON.parse(userStr);
@@ -26,7 +23,16 @@ function AuthGuard({ children }) {
         localStorage.removeItem("user");
       }
     }
+    setIsChecking(false);
   }, [dispatch, isAuthenticated]);
+
+  if (isChecking && !isAuthenticated) {
+    return null; 
+  }
+
+  if (!isAuthenticated) {
+      return <Navigate to="/login" replace />;
+  }
 
   // Check authentication from Redux store
   // if (!isAuthenticated) {
