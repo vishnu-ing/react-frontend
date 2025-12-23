@@ -1,7 +1,7 @@
 //Auth slice code goes here
 
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser } from "./auth.thunks";
+import { loginUser, registerUser } from "./auth.thunks";
 
 const initialState = {
   user: null,
@@ -9,6 +9,8 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  registrationSuccess: false,
+  registrationMessage: null,
 };
 
 const authSlice = createSlice({
@@ -32,6 +34,15 @@ const authSlice = createSlice({
     // Clear error
     clearError: (state) => {
       state.error = null;
+    },
+    // Set error manually
+    setError: (state, action) => {
+      state.error = action.payload || null;
+    },
+    // Clear registration status
+    clearRegistration: (state) => {
+      state.registrationSuccess = false;
+      state.registrationMessage = null;
     },
   },
   extraReducers: (builder) => {
@@ -57,9 +68,29 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Login failed";
         state.isAuthenticated = false;
+      })
+      // Register pending
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.registrationSuccess = false;
+        state.registrationMessage = null;
+      })
+      // Register fulfilled
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.registrationSuccess = true;
+        state.registrationMessage = action.payload?.message || "Registered";
+      })
+      // Register rejected
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Registration failed";
+        state.registrationSuccess = false;
       });
   },
 });
 
-export const { logout, setCredentials, clearError } = authSlice.actions;
+export const { logout, setCredentials, clearError, setError, clearRegistration } = authSlice.actions;
 export default authSlice.reducer;

@@ -3,11 +3,9 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import OnboardingApplication from "./pages/OnboardingApplication";
 import AuthGuard from "./guards/AuthGuard";
-import { authService } from "./api/authService";
 import Layout from "./components/Layout";
 import PersonalProfile from "./pages/PersonalProfile";
 import Logout from "./pages/Logout";
-import RegistrationGuard from "./guards/RegistrationGuard";
 import Registration from "./pages/Registration";
 import Starter from "./components/Starter";
 import HousingDetails from "./components/HousingDetails/HousingDetails";
@@ -41,10 +39,8 @@ function App() {
           </Route>
         </Route>
 
-        {/* Protected routes */}
-        <Route element={<RegistrationGuard />}>
-          <Route path="/registration/:token" element={<Registration />} />
-        </Route>
+        {/* Public registration route */}
+        <Route path="/register" element={<Registration />} />
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
