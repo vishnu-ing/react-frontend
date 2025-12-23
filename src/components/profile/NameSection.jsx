@@ -90,8 +90,8 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-                  update("profilePicture", URL.createObjectURL(file));
-                }}
+                  // keep the File object so parent can upload it on Save
+                  update("profilePictureFile", file);}}
               />
             </Button>
           )}
