@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Box,
@@ -12,18 +12,18 @@ import {
   IconButton,
   InputAdornment,
   Popover,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { loginUser } from "../store/authSlice/auth.thunks";
-import { clearError } from "../store/authSlice/auth.slice";
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { loginUser } from '../store/authSlice/auth.thunks';
+import { clearError } from '../store/authSlice/auth.slice';
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [usernameAnchor, setUsernameAnchor] = useState(null);
   const [passwordAnchor, setPasswordAnchor] = useState(null);
 
@@ -35,26 +35,26 @@ function Login() {
   );
 
   const validateUsername = (value) => {
-    if (value.length === 0) return "";
-    if (value.length < 6) return "Username must be at least 6 characters";
-    if (value.length > 12) return "Username must be at most 12 characters";
+    if (value.length === 0) return '';
+    if (value.length < 6) return 'Username must be at least 6 characters';
+    if (value.length > 12) return 'Username must be at most 12 characters';
     if (!/^[a-zA-Z0-9]+$/.test(value)) {
-      return "Username must be alphanumeric (letters and numbers only)";
+      return 'Username must be alphanumeric (letters and numbers only)';
     }
-    return "";
+    return '';
   };
 
   const validatePassword = (value) => {
-    if (value.length === 0) return "";
-    if (!/[a-z]/.test(value)) return "Password must contain a lowercase letter";
+    if (value.length === 0) return '';
+    if (!/[a-z]/.test(value)) return 'Password must contain a lowercase letter';
     if (!/[A-Z]/.test(value))
-      return "Password must contain an uppercase letter";
-    if (!/[0-9]/.test(value)) return "Password must contain a number";
+      return 'Password must contain an uppercase letter';
+    if (!/[0-9]/.test(value)) return 'Password must contain a number';
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Password must contain a special character";
+      return 'Password must contain a special character';
     }
-    if (value.length < 8) return "Password must be at least 8 characters";
-    return "";
+    if (value.length < 8) return 'Password must be at least 8 characters';
+    return '';
   };
 
   const handleUsernameChange = (e) => {
@@ -91,10 +91,10 @@ function Login() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.onboardingStatus === "Approved") {
-        navigate("/personal-info");
+      if (user.onboardingStatus === 'Approved') {
+        navigate('/personal-info');
       } else {
-        navigate("/onboarding");
+        navigate('/onboarding');
       }
     }
   }, [isAuthenticated, user, navigate]);
@@ -123,13 +123,13 @@ function Login() {
     <Container maxWidth="sm">
       <Box
         sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
+        <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
           <Typography variant="h4" component="h1" gutterBottom align="center">
             Employee Login
           </Typography>
@@ -150,11 +150,11 @@ function Login() {
             <Popover
               open={Boolean(usernameAnchor && usernameError)}
               anchorEl={usernameAnchor}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               disableAutoFocus
               disableEnforceFocus
-              sx={{ pointerEvents: "none" }}
+              sx={{ pointerEvents: 'none' }}
             >
               <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
                 {usernameError}
@@ -164,7 +164,7 @@ function Login() {
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={handlePasswordChange}
               margin="normal"
@@ -190,11 +190,11 @@ function Login() {
             <Popover
               open={Boolean(passwordAnchor && passwordError)}
               anchorEl={passwordAnchor}
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
               disableAutoFocus
               disableEnforceFocus
-              sx={{ pointerEvents: "none" }}
+              sx={{ pointerEvents: 'none' }}
             >
               <Alert severity="error" sx={{ m: 1, minWidth: 250 }}>
                 {passwordError}
@@ -217,7 +217,7 @@ function Login() {
               }
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? "Logging in..." : "Login"}
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
           </Box>
         </Paper>
