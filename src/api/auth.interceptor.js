@@ -9,6 +9,12 @@ axiosInstance.interceptors.request.use((request) => {
   const token = localStorage.getItem("token");
   if (token) {
     request.headers.Authorization = `Bearer ${token}`;
+    console.log(
+      "Added Authorization header:",
+      request.headers.Authorization.substring(0, 20) + "..."
+    );
+  } else {
+    console.log("No token in localStorage - skipping Authorization header");
   }
   return request;
 });

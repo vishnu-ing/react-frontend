@@ -11,56 +11,11 @@ const FacilityReportDetail = () => {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const res = await axiosInstance.get(
-          `/api/facility-reports/${reportId}`
-        );
+        const res = await axiosInstance.get(`/facility-reports/${reportId}`);
         setReport(res.data);
       } catch (error) {
         console.error("Error fetching facility report details:", error);
-        // Mock data for testing
-        const mockReports = [
-          {
-            id: 1,
-            _id: "1",
-            title: "Broken AC Unit",
-            description: "Air conditioning in Building A is not working",
-            status: "Pending",
-            date: "2025-12-20",
-            location: "Building A, Room 301",
-            reportedBy: "John Doe",
-            priority: "High",
-            notes:
-              "Unit has been making unusual noises for the past week before completely stopping.",
-          },
-          {
-            id: 2,
-            _id: "2",
-            title: "Leaky Faucet",
-            description: "Bathroom on 2nd floor has a leaking sink",
-            status: "In Progress",
-            date: "2025-12-19",
-            location: "Building B, 2nd Floor Bathroom",
-            reportedBy: "Jane Smith",
-            priority: "Medium",
-            notes: "Water is dripping continuously, causing water waste.",
-          },
-          {
-            id: 3,
-            _id: "3",
-            title: "Broken Window",
-            description: "Conference room window cracked",
-            status: "Completed",
-            date: "2025-12-18",
-            location: "Building C, Conference Room 1",
-            reportedBy: "Mike Johnson",
-            priority: "Low",
-            notes: "Small crack in bottom left corner. Replaced on 2025-12-19.",
-          },
-        ];
-        const foundReport = mockReports.find(
-          (r) => r._id === reportId || r.id.toString() === reportId
-        );
-        setReport(foundReport || null);
+        setReport(null);
       } finally {
         setLoading(false);
       }
