@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 
 const EMPTY_CONTACT = {
-  firstName: "",
-  middleName: "",
-  lastName: "",
-  phone: "",
-  email: "",
-  relationship: "",
+  firstName: "First Name",
+  middleName: "Middle Name",
+  lastName: "Last Name",
+  phone: "000-000-0000",
+  email: "user@domain.com",
+  relationship: "Relationship",
 };
 const nameRegex = /^[A-Za-z\s]*$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,6 +66,11 @@ export default function EmergencyContactsSection({
       updateContact(idx, key, val);
       return;
     }
+    if (val == "") {
+      setAbsoluteError(true);
+      updateContact(idx,key, val);
+      return;
+    }
     setAbsoluteError(false);
     updateContact(idx, key, val);
   };
@@ -87,6 +92,11 @@ export default function EmergencyContactsSection({
       updateContact(idx, str, formatted);
       return;
     }
+    if (formatted == '') {
+      setAbsoluteError(true);
+      updateContact(idx, str, formatted);
+      return;
+    }
     setAbsoluteError(false);
     updateContact(idx, str, formatted);
   };
@@ -102,10 +112,23 @@ export default function EmergencyContactsSection({
        updateContact(idx, str,val)
       return;
     }
+    if (val == '') {
+      setAbsoluteError(true);
+       updateContact(idx, str,val)
+      return;
+    }
     setAbsoluteError(false);
     updateContact(idx, str,val)
   };
-
+  const handleRelationship = (idx, str,val) => {
+     if (val == '') {
+      setAbsoluteError(true);
+       updateContact(idx, str,val)
+      return;
+    }
+    setAbsoluteError(false);
+    updateContact(idx, str,val)
+  }
   return (
     <Paper elevation={2} sx={{ p: 3 }}>
       <Typography variant="h6">Emergency Contacts</Typography>
@@ -144,9 +167,7 @@ export default function EmergencyContactsSection({
                     label="First Name"
                     value={c.firstName}
                     disabled={!isEditing}
-                    // onChange={(e) =>
-                    //   updateContact(idx, "firstName", e.target.value)
-                    // }
+                    required
                     onChange={(e) =>
                       handleName(idx, "firstName", e.target.value)
                     }
@@ -163,9 +184,7 @@ export default function EmergencyContactsSection({
                     label="Middle Name"
                     value={c.middleName}
                     disabled={!isEditing}
-                    // onChange={(e) =>
-                    //   updateContact(idx, "middleName", e.target.value)
-                    // }
+           
                     onChange={(e) =>
                       handleName(idx, "middleName", e.target.value)
                     }
@@ -182,9 +201,7 @@ export default function EmergencyContactsSection({
                     label="Last Name"
                     value={c.lastName}
                     disabled={!isEditing}
-                    // onChange={(e) =>
-                    //   updateContact(idx, "lastName", e.target.value)
-                    // }
+                    required
                     onChange={(e) =>
                       handleName(idx, "lastName", e.target.value)
                     }
@@ -203,9 +220,7 @@ export default function EmergencyContactsSection({
                     label="Phone"
                     value={c.phone}
                     disabled={!isEditing}
-                    // onChange={(e) =>
-                    //   updateContact(idx, "phone", e.target.value)
-                    // }
+                    required
                     onChange={(e) => handlePhone(idx, "phone", e.target.value)}
                     error={isInvalidPhone(c.phone)}
                     helperText={
@@ -218,9 +233,7 @@ export default function EmergencyContactsSection({
                     label="Email"
                     value={c.email}
                     disabled={!isEditing}
-                    // onChange={(e) =>
-                    //   updateContact(idx, "email", e.target.value)
-                    // }
+                    required
                     onChange={(e) => handleEmail(idx, "email", e.target.value)}
                     error={!!c.email && !emailRegex.test(c.email)}
                     helperText={
@@ -237,8 +250,9 @@ export default function EmergencyContactsSection({
                   value={c.relationship}
                   disabled={!isEditing}
                   onChange={(e) =>
-                    updateContact(idx, "relationship", e.target.value)
+                    handleRelationship(idx, "relationship", e.target.value)
                   }
+                  required
                   fullWidth
                 />
               </Stack>

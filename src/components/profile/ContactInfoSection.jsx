@@ -36,6 +36,11 @@ export default function ContactInfoSection({
       update(key, formatted);
       return;
     }
+    if (key == 'cellPhone' && formatted == "") {
+      setAbsoluteError(true);
+      update(key, formatted);
+      return;
+    }
     setAbsoluteError(false)
     update(key, formatted);
   };
@@ -60,6 +65,7 @@ export default function ContactInfoSection({
               ? "Format: XXX-XXX-XXXX"
               : ""
           }
+          required
           fullWidth
         />
 

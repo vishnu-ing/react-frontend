@@ -7,7 +7,7 @@ import {
   Paper,
 } from "@mui/material";
 
-export default function AddressSection({ data, setDraft, isEditing }) {
+export default function AddressSection({ data, setDraft, isEditing , setAbsoluteError}) {
   const address = data.address || {};
 
   const update = (key, value) => {
@@ -19,7 +19,15 @@ export default function AddressSection({ data, setDraft, isEditing }) {
       },
     });
   };
-
+  const handleError = (key,e) => {
+    if (e.target.value == "") {
+      setAbsoluteError(true);
+      update(key, e.target.value);
+      return;
+    }
+    setAbsoluteError(false);
+    update(key, e.target.value);
+  }
   return (
     <Paper elevation={2} sx={{ p: 3 }}>
       <Typography variant="h6" gutterBottom>
@@ -31,15 +39,16 @@ export default function AddressSection({ data, setDraft, isEditing }) {
           label="Building / Apt #"
           value={address.buildingApt || ""}
           disabled={!isEditing}
-          onChange={(e) => update("buildingApt", e.target.value)}
+          onChange={(e) => handleError("buildingApt", e)}
           fullWidth
+          required
         />
 
         <TextField
           label="Street"
           value={address.street || ""}
           disabled={!isEditing}
-          onChange={(e) => update("street", e.target.value)}
+          onChange={(e) => handleError("street", e)}
           fullWidth
           required
         />
@@ -49,7 +58,7 @@ export default function AddressSection({ data, setDraft, isEditing }) {
             label="City"
             value={address.city || ""}
             disabled={!isEditing}
-            onChange={(e) => update("city", e.target.value)}
+            onChange={(e) => handleError("city", e)}
             fullWidth
             required
           />
@@ -58,7 +67,7 @@ export default function AddressSection({ data, setDraft, isEditing }) {
             label="State"
             value={address.state || ""}
             disabled={!isEditing}
-            onChange={(e) => update("state", e.target.value)}
+            onChange={(e) => handleError("state", e)}
             fullWidth
             required
           />
@@ -67,7 +76,7 @@ export default function AddressSection({ data, setDraft, isEditing }) {
             label="Zip Code"
             value={address.zip || ""}
             disabled={!isEditing}
-            onChange={(e) => update("zip", e.target.value)}
+            onChange={(e) => handleError("zip", e)}
             fullWidth
             required
           />

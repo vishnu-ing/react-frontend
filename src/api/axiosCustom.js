@@ -4,7 +4,7 @@ export const fetchPersonalInfo = () => {
     return axiosInstance.get(`/personal-info/user`);
 }
 
-export const updatePersonInfo = ( body) => {
+export const updatePersonInfo = (body) => {
     return axiosInstance.put(`/personal-info/user`, body)
 
 }

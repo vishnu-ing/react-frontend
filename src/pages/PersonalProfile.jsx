@@ -145,7 +145,7 @@ export default function PersonalProfile() {
         setAbsoluteError={setAbsoluteError}
       />
 
-      <AddressSection data={draft} setDraft={setDraft} isEditing={isEditing} />
+      <AddressSection data={draft} setDraft={setDraft} isEditing={isEditing} setAbsoluteError={setAbsoluteError} />
 
       <ContactInfoSection
         data={draft}
@@ -171,7 +171,7 @@ export default function PersonalProfile() {
         data={draft}
         setDraft={setDraft}
         isEditing={isEditing}
-        setAbsoluteError={setAbsoluteError}
+        
         visaDocuments={draft.visaDocuments || []}
       />
     </div>

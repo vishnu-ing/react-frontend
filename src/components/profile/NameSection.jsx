@@ -31,7 +31,13 @@ export default function NameSection({
   // ===== blocking handlers =====
   const handleName = (key) => (e) => {
     const val = e.target.value;
+
     if (!nameRegex.test(val)) {
+      setAbsoluteError(true);
+      update(key, val);
+      return;
+    }
+    if (val == "") {
       setAbsoluteError(true);
       update(key, val);
       return;
@@ -56,6 +62,11 @@ export default function NameSection({
       update("ssn", formatted);
       return;
     }
+    if (formatted == "") {
+      setAbsoluteError(true);
+      update("ssn", formatted);
+      return;
+    }
     setAbsoluteError(false);
     update("ssn", formatted);
   };
@@ -70,7 +81,15 @@ export default function NameSection({
     setAbsoluteError(false);
     update(key, val);
   };
-
+  const handleDOB = (e) => {
+    if (e.target.value == "") {
+      setAbsoluteError(true);
+      update("dob", e.target.value);
+      return;
+    }
+    setAbsoluteError(false);
+    update("dob", e.target.value);
+  };
   return (
     <Paper elevation={2} sx={{ p: 3 }}>
       <Typography variant="h6" gutterBottom>
@@ -116,6 +135,7 @@ export default function NameSection({
                 ? "Only letters allowed"
                 : ""
             }
+            required
             fullWidth
           />
 
@@ -130,6 +150,7 @@ export default function NameSection({
                 ? "Only letters allowed"
                 : ""
             }
+            required
             fullWidth
           />
         </Stack>
@@ -176,7 +197,7 @@ export default function NameSection({
                 ? "Format: XXX-XX-XXXX"
                 : ""
             }
-            inputProps={{ maxLength: 11 }}
+            required
             fullWidth
           />
 
@@ -185,8 +206,8 @@ export default function NameSection({
             type="date"
             value={name.dob || ""}
             disabled={!isEditing}
-            onChange={(e) => update("dob", e.target.value)}
-            InputLabelProps={{ shrink: true }}
+            onChange={(e) => handleDOB(e)}
+            required
             fullWidth
           />
         </Stack>
