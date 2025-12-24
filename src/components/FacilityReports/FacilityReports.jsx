@@ -60,7 +60,7 @@ const FacilityReportsPage = () => {
       <h2>Facility Reports</h2>
       <ul className="facility__reports">
         {reports.map((report) => (
-          <li key={report.id} className="facility__report">
+          <li key={report._id} className="facility__report">
             <h3>{report.title}</h3>
             <p>{report.description}</p>
             <p>
