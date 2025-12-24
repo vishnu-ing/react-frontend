@@ -10,7 +10,7 @@ const FacilityReportsPage = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await axiosInstance.get("/api/facility-reports");
+        const res = await axiosInstance.get("/facility-reports");
         const data = Array.isArray(res.data)
           ? res.data
           : res.data.reports || [];
