@@ -1,13 +1,15 @@
 import { Stack, Typography, RadioGroup, FormControlLabel, Radio, Select, MenuItem, TextField, InputLabel, FormControl } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
+import { useState } from 'react';
 import MuiUpload from "../MuiUpload";
-import { useS3Upload } from '../../hooks/uses3Upload';
+import { uploadVisaDocument } from '../../api/axiosCustom';
 
 const CitizenStatus = ({ isLocked }) => {
     const { control, watch } = useFormContext();
     const isCitizen = watch("isCitizen");
     const workAuth = watch("workAuth");
     const visaStart = watch("visaStart");
+    const [isUploadingOpt, setIsUploadingOpt] = useState(false);
     return (
         <Stack spacing={3}>
             {/* citizenship status*/}
@@ -65,12 +67,25 @@ const CitizenStatus = ({ isLocked }) => {
                             name="optReceipt"
                             control={control}
                             render={({ field: { onChange, value } }) => {
-                                const {handleUpload, isUploading} = useS3Upload(onChange);
+                                const handleUpload = async (file) => {
+                                    if (!file) return;
+                                    setIsUploadingOpt(true);
+                                    try {
+                                        const res = await uploadVisaDocument(file, 'OPT Receipt', visaStart || '', '');
+                                        const fileUrl = res?.data?.fileUrl;
+                                        if (fileUrl) onChange(fileUrl);
+                                    } catch (err) {
+                                        console.error('OPT upload failed', err);
+                                    } finally {
+                                        setIsUploadingOpt(false);
+                                    }
+                                };
+
                                 return (
-                                    <MuiUpload 
-                                        label="Upload OPT Receipt" 
-                                        disabled={isLocked || isUploading} 
-                                        onChange={handleUpload} 
+                                    <MuiUpload
+                                        label="Upload OPT Receipt"
+                                        disabled={isLocked || isUploadingOpt}
+                                        onChange={handleUpload}
                                         fileName={typeof value === 'string' ? value.split('/').pop() : ""}
                                     />
                                 )}

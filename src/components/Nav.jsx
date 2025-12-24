@@ -57,6 +57,14 @@ const Nav = () => {
               style={{ color: "black", textDecoration: "none" }}
             >
               Housing
+              </NavLink>
+          </Button>
+          <Button color="inherit">
+            <NavLink
+              to="/visa"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              Visa
             </NavLink>
           </Button>
           <Box sx={{ flexGrow: 1 }} />
