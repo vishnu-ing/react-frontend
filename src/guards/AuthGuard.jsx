@@ -11,6 +11,10 @@ function AuthGuard({ children }) {
 
   // On mount, check localStorage and rehydrate Redux state
   useEffect(() => {
+    if (!isAuthenticated) {
+      <Navigate to="/login" replace />;
+      return;
+    }
     const token = localStorage.getItem("token");
     const userStr = localStorage.getItem("user");
     if (token && userStr && !isAuthenticated) {

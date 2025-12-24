@@ -38,7 +38,7 @@ export default function EditToolbar({
       >
         Save
       </Button>
-      {absoluteError && <h1>Fix Errors before submitting</h1>}
+      {absoluteError && <h1>Fix input errors / required inputs</h1>}
     </Stack>
   );
 }
