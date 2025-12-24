@@ -1,6 +1,7 @@
 // housing details component
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { useParams } from "react-router-dom";
+import axiosInstance from "../../api/auth.interceptor";
 
 // Example mock data
 const mockHousing = {
@@ -11,21 +12,21 @@ const mockHousing = {
   ],
 };
 
-const HousingDetails = ({ userId }) => {
+const HousingDetails = () => {
+  const { userId } = useParams();
   const [housing, setHousing] = useState(null);
 
-  // Fetch housing details when component mounts or userId changes
   useEffect(() => {
     const fetchHousing = async () => {
       try {
-        const res = await axios.get(`/api/housing/me`);
+        const res = await axiosInstance.get(`/housing/${userId}`);
         setHousing(res.data);
       } catch (error) {
         console.error("Error fetching housing details:", error);
       }
     };
-    fetchHousing();
-  }, []);
+    if (userId) fetchHousing();
+  }, [userId]);
 
   if (!housing) return <div>Loading...</div>;
 
@@ -37,11 +38,12 @@ const HousingDetails = ({ userId }) => {
       </p>
       <h2>Roommates</h2>
       <ul>
-        {housing.roommates.map((roommate, index) => (
-          <li key={index}>
-            {roommate.name} - {roommate.phone}
-          </li>
-        ))}
+        {Array.isArray(housing.roommates) &&
+          housing.roommates.map((roommate, index) => (
+            <li key={index}>
+              {roommate.name} - {roommate.phone}
+            </li>
+          ))}
       </ul>
     </div>
   );
