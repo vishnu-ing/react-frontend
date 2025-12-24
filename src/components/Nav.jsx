@@ -1,4 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { authService } from "../api/authService";
+import { parseJwt } from "../utils/jwt";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,6 +11,17 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const Nav = () => {
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const token = authService.getToken();
+    if (token) {
+      const payload = parseJwt(token);
+      if (payload && (payload.userId || payload.id || payload.sub)) {
+        setUserId(payload.userId || payload.id || payload.sub);
+      }
+    }
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -35,6 +49,14 @@ const Nav = () => {
               style={{ color: "black", textDecoration: "none" }}
             >
               Onboarding
+            </NavLink>
+          </Button>
+          <Button color="inherit" disabled={!userId}>
+            <NavLink
+              to="/housing/me"
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              Housing
             </NavLink>
           </Button>
           <Box sx={{ flexGrow: 1 }} />
