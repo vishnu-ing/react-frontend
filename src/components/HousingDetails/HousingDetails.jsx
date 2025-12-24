@@ -27,6 +27,7 @@ const HousingDetails = () => {
     };
     if (userId) fetchHousing();
   }, [userId]);
+<<<<<<< HEAD
         setHousing(res.data);
       } catch (error) {
         console.error("Error fetching housing details:", error);
@@ -39,6 +40,8 @@ const HousingDetails = () => {
     fetchHousing();
   }, []);
 >>>>>>> cf9081f (SCRUM5-SCRUM10-SCRUM11 Added front end functionality for housing and facility reports)
+=======
+>>>>>>> 56d6bc4 (Updated changes to work on front end while using the backend. Tested on my side and it successful)
 
   if (!housing) return <div>Loading...</div>;
 
