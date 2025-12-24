@@ -6,17 +6,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../api/authService";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../store/userSlice/user.slice";
 import {logout} from '../store/authSlice/auth.slice'
 function Logout() {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
   const dispatch = useDispatch();
-
+  const [open, setOpen] = useState(true);
     const handleConfirm = () => {
-        
         dispatch(resetUser())
         dispatch(logout())
         navigate('/login', { replace: true })

@@ -3,6 +3,9 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import OnboardingApplication from "./pages/OnboardingApplication";
 import AuthGuard from "./guards/AuthGuard";
+import { authService } from "./api/authService";
+import './App.css'
+import Starter from './components/Starter';
 import Layout from "./components/Layout";
 import PersonalProfile from "./pages/PersonalProfile";
 import Logout from "./pages/Logout";
