@@ -10,23 +10,22 @@ export default function EditToolbar({
   onSave,
   loading,
   disabled,
-  absoluteError
+  absoluteError,
 }) {
   if (!isEditing) {
     return (
-      <Button variant="outlined" startIcon={<EditIcon />} onClick={onEdit}>
-        Edit
-      </Button>
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <Button variant="outlined" startIcon={<EditIcon />} onClick={onEdit}>
+          Edit
+        </Button>
+      </Stack>
     );
   }
 
   return (
-    <Stack direction="row" spacing={2}>
-      <Button
-        startIcon={<CloseIcon />}
-        onClick={onCancel}
-        disabled={loading}
-      >
+    <>
+      <Stack direction="row" spacing={2} justifyContent="center">
+      <Button startIcon={<CloseIcon />} onClick={onCancel} disabled={loading}>
         Cancel
       </Button>
 
@@ -38,7 +37,10 @@ export default function EditToolbar({
       >
         Save
       </Button>
-      {absoluteError && <h1>Fix input errors / required inputs</h1>}
+      
     </Stack>
+    {absoluteError && <h1 style = {{display:'flex', flexDirection:'row', justifyContent:'center'}}>Fix Input Errors / Required Inputs</h1>}
+    </>
+    
   );
 }
