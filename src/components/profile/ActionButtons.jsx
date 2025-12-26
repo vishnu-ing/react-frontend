@@ -6,18 +6,20 @@ export default function ActionButtons({
   onCancel,
   onSave,
   loading,
-  disableSave,   // 👈 NEW
+  disableSave,
 }) {
   if (!isEditing) {
     return (
-      <Button variant="outlined" onClick={onEdit}>
-        Edit
-      </Button>
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <Button variant="outlined" onClick={onEdit}>
+          Edit
+        </Button>
+      </Stack>
     );
   }
 
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction="row" spacing={2} justifyContent="center">
       <Button onClick={onCancel} disabled={loading}>
         Cancel
       </Button>
@@ -25,7 +27,7 @@ export default function ActionButtons({
       <Button
         variant="contained"
         onClick={onSave}
-        disabled={loading || disableSave}   // 👈 KEY LINE
+        disabled={loading || disableSave}
       >
         {loading ? "Saving..." : "Save"}
       </Button>

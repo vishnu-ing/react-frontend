@@ -1,13 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink, Navigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useSelector } from "react-redux";
 
 const Nav = () => {
+  const { onboardingStatus, workAuth } = useSelector(
+    (state) => state.auth.user
+  );
+  if (onboardingStatus !== "Approved") return <Navigate to="/onboarding" replace />;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -15,33 +17,35 @@ const Nav = () => {
         <Toolbar>
           <Button color="inherit">
             <NavLink
-              to="/home"
-              style={{ color: "black", textDecoration: "none" }}
-            >
-              Home
-            </NavLink>
-          </Button>
-          <Button color="inherit">
-            <NavLink
-              to="/personal-info"
-              style={{ color: "black", textDecoration: "none" }}
+              to="/profile"
+              style={{ color: "white", textDecoration: "none" }}
             >
               Profile
             </NavLink>
           </Button>
           <Button color="inherit">
             <NavLink
-              to="/onboarding"
-              style={{ color: "black", textDecoration: "none" }}
+              to="/housing/me"
+              style={{ color: "white", textDecoration: "none" }}
             >
-              Onboarding
+              Housing
             </NavLink>
           </Button>
+          {workAuth === "F1" && (
+            <Button color="inherit">
+              <NavLink
+                to="/visa"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                Visa
+              </NavLink>
+            </Button>
+          )}
           <Box sx={{ flexGrow: 1 }} />
-          <Button style={{ color: "black", textDecoration: "none" }}>
+          <Button style={{ color: "white", textDecoration: "none" }}>
             <NavLink
               to="/logout"
-              style={{ color: "black", textDecoration: "none" }}
+              style={{ color: "white", textDecoration: "none" }}
             >
               Log out
             </NavLink>

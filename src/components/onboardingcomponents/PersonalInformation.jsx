@@ -18,9 +18,10 @@ const PersonalInformation = ({ isLocked }) => {
                 <Controller
                     key={f.name}
                     name={f.name}
+                    rules={f.required ? { required: "Required" } : {}}
                     control={control}
-                    render={({ field }) => (
-                        <TextField {...field} label={f.label} required={f.required} disabled={isLocked} fullWidth />
+                    render={({ field, fieldState: { error } }) => (
+                        <TextField {...field} label={f.label} fullWidth disabled={isLocked} error={!!error} helperText={error?.message} />
                     )}
                 />
             ))}

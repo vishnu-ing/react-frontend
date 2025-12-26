@@ -5,7 +5,6 @@ const Layout = () => {
   return (
     <>
       <Nav />
-      {/* Outlet is a placeholder for the child components of the current route */}
       <Outlet />
     </>
   );

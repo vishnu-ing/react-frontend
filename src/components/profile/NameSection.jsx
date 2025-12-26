@@ -1,4 +1,3 @@
-
 import {
   Avatar,
   Button,
@@ -14,7 +13,12 @@ const nameRegex = /^[A-Za-z\s]*$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ssnFullRegex = /^\d{3}-\d{2}-\d{4}$/;
 
-export default function NameSection({ data, setDraft, isEditing,setAbsoluteError }) {
+export default function NameSection({
+  data,
+  setDraft,
+  isEditing,
+  setAbsoluteError,
+}) {
   const name = data.name || {};
 
   const update = (key, value) => {
@@ -27,47 +31,67 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
   // ===== blocking handlers =====
   const handleName = (key) => (e) => {
     const val = e.target.value;
+
     if (!nameRegex.test(val)) {
-      setAbsoluteError(true)
+      setAbsoluteError(true);
       update(key, val);
       return;
     }
-    setAbsoluteError(false)
+    if (val == "") {
+      setAbsoluteError(true);
+      update(key, val);
+      return;
+    }
+    setAbsoluteError(false);
     update(key, val);
   };
 
   const handleSSN = (e) => {
     const digits = e.target.value.replace(/\D/g, "").slice(0, 9);
-    
+
     let formatted = digits;
     if (digits.length > 5) {
-      formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+      formatted = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(
+        5
+      )}`;
     } else if (digits.length > 3) {
       formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
     }
-    if(!ssnFullRegex.test(formatted)){
-      setAbsoluteError(true)
+    if (!ssnFullRegex.test(formatted)) {
+      setAbsoluteError(true);
       update("ssn", formatted);
       return;
     }
-    setAbsoluteError(false)
+    if (formatted == "") {
+      setAbsoluteError(true);
+      update("ssn", formatted);
+      return;
+    }
+    setAbsoluteError(false);
     update("ssn", formatted);
   };
 
-
-   const handleEmail = (key) => (e) => {
+  const handleEmail = (key) => (e) => {
     const val = e.target.value;
     if (!emailRegex.test(val)) {
-      setAbsoluteError(true)
-       update(key, val);
+      setAbsoluteError(true);
+      update(key, val);
       return;
     }
-    setAbsoluteError(false)
+    setAbsoluteError(false);
     update(key, val);
   };
-
+  const handleDOB = (e) => {
+    if (e.target.value == "") {
+      setAbsoluteError(true);
+      update("dob", e.target.value);
+      return;
+    }
+    setAbsoluteError(false);
+    update("dob", e.target.value);
+  };
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6" gutterBottom>
         Name
       </Typography>
@@ -91,7 +115,8 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
                   const file = e.target.files?.[0];
                   if (!file) return;
                   // keep the File object so parent can upload it on Save
-                  update("profilePictureFile", file);}}
+                  update("profilePictureFile", file);
+                }}
               />
             </Button>
           )}
@@ -110,6 +135,7 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
                 ? "Only letters allowed"
                 : ""
             }
+            required
             fullWidth
           />
 
@@ -124,6 +150,7 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
                 ? "Only letters allowed"
                 : ""
             }
+            required
             fullWidth
           />
         </Stack>
@@ -152,9 +179,7 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
           onChange={handleEmail("email")}
           error={!!name.email && !emailRegex.test(name.email)}
           helperText={
-            !!name.email && !emailRegex.test(name.email)
-              ? "Invalid email"
-              : ""
+            !!name.email && !emailRegex.test(name.email) ? "Invalid email" : ""
           }
           fullWidth
         />
@@ -172,7 +197,7 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
                 ? "Format: XXX-XX-XXXX"
                 : ""
             }
-            inputProps={{ maxLength: 11 }}
+            required
             fullWidth
           />
 
@@ -181,11 +206,12 @@ export default function NameSection({ data, setDraft, isEditing,setAbsoluteError
             type="date"
             value={name.dob || ""}
             disabled={!isEditing}
-            onChange={(e) => update("dob", e.target.value)}
-            InputLabelProps={{ shrink: true }}
+            onChange={(e) => handleDOB(e)}
+            required
             fullWidth
           />
         </Stack>
       </Stack>
     </Paper>
-  )}
+  );
+}

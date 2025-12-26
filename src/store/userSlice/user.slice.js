@@ -5,7 +5,7 @@ export const getPersonalInfoThunk = createAsyncThunk(
   "user/getPersonalInfo",
   async (_,{ rejectWithValue }) => {
     try {
-      console.log("inside getpersonalinfothunk")
+      
       const res = await fetchPersonalInfo();
       return res.data;
     } catch (err) {

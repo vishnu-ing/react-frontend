@@ -36,6 +36,11 @@ export default function ContactInfoSection({
       update(key, formatted);
       return;
     }
+    if (key == 'cellPhone' && formatted == "") {
+      setAbsoluteError(true);
+      update(key, formatted);
+      return;
+    }
     setAbsoluteError(false)
     update(key, formatted);
   };
@@ -45,7 +50,7 @@ export default function ContactInfoSection({
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6">Contact Info</Typography>
 
       <Stack spacing={2}>
@@ -60,6 +65,7 @@ export default function ContactInfoSection({
               ? "Format: XXX-XXX-XXXX"
               : ""
           }
+          required
           fullWidth
         />
 

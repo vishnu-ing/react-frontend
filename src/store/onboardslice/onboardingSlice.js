@@ -13,7 +13,12 @@ const onboardingSlice = createSlice({
   },
 
   reducers: {
-   
+   resetOnboardingState: (state) => {
+      state.formData = {};
+      state.onboardingStatus = 'Not Started';
+      state.loading = false;
+      state.error = null;
+    }
   },
   //handle if our backend request is successfull or not
   extraReducers:(builder)=>{
@@ -37,5 +42,5 @@ const onboardingSlice = createSlice({
       })
     }
 });
-
+export const { resetOnboardingState } = onboardingSlice.actions;
 export default onboardingSlice.reducer;
