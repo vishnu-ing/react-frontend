@@ -22,7 +22,7 @@ export default function DriverLicenseSection({
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6" gutterBottom>
         Driver License
       </Typography>

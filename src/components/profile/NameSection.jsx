@@ -91,7 +91,7 @@ export default function NameSection({
     update("dob", e.target.value);
   };
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6" gutterBottom>
         Name
       </Typography>

@@ -19,7 +19,7 @@ const CitizenStatus = ({ isLocked }) => {
                     name="isCitizen"
                     control={control}
                     render={({ field }) => (
-                        <RadioGroup {...field} row>
+                        <RadioGroup {...field} row required>
                             <FormControlLabel value="Yes" control={<Radio disabled={isLocked} />} label="Yes" />
                             <FormControlLabel value="No" control={<Radio disabled={isLocked} />} label="No" />
                         </RadioGroup>
@@ -33,8 +33,8 @@ const CitizenStatus = ({ isLocked }) => {
                     <Controller
                         name="citizenType"
                         control={control}
-                        render={({ field }) => (
-                            <Select {...field} label="Choose your status" disabled={isLocked} >
+                        render={({ field, fieldState: { error } }) => (
+                            <Select {...field} label="Choose your status" disabled={isLocked} required error={!!error} helperText={error?.message}>
                                 <MenuItem value="Green Card">Green Card</MenuItem>
                                 <MenuItem value="Citizen">Citizen</MenuItem>
                             </Select>
@@ -52,7 +52,7 @@ const CitizenStatus = ({ isLocked }) => {
                             name="workAuth"
                             control={control}
                             render={({ field }) => (
-                                <Select {...field} label="What is your work authorization?" disabled={isLocked}>
+                                <Select {...field} label="What is your work authorization?" disabled={isLocked} required >
                                     <MenuItem value="H1-B">H1-B</MenuItem>
                                     <MenuItem value="L2">L2</MenuItem>
                                     <MenuItem value="F1">F1(CPT/OPT)</MenuItem>

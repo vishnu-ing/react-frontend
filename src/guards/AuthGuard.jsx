@@ -1,20 +1,15 @@
+import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { setCredentials } from "../store/authSlice/auth.slice";
-import { useState } from "react";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function AuthGuard({ children }) {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const [isChecking, setIsChecking] = useState(true);
 
-  // On mount, check localStorage and rehydrate Redux state
   useEffect(() => {
-    if (!isAuthenticated) {
-      <Navigate to="/login" replace />;
-      return;
-    }
     const token = localStorage.getItem("token");
     const userStr = localStorage.getItem("user");
     if (token && userStr && !isAuthenticated) {
@@ -30,24 +25,11 @@ function AuthGuard({ children }) {
     setIsChecking(false);
   }, [dispatch, isAuthenticated]);
 
-  if (isChecking && !isAuthenticated) {
-    return null; 
-  }
+  if (isChecking) return <LoadingSpinner />;
 
-  if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
-  }
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
 
-  // Check authentication from Redux store
-  // if (!isAuthenticated) {
-  //   // Also check localStorage as fallback
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     return <Navigate to="/login" replace />;
-  //   }
-  // }
-
-  return <Outlet />;
+  return children ? children : <Outlet />;
 }
 
 export default AuthGuard;

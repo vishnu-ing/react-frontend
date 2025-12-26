@@ -33,7 +33,7 @@ function Logout() {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => navigate('/home')}>Cancel</Button>
+        <Button onClick={() => navigate('/profile')}>Cancel</Button>
         <Button onClick={handleConfirm} autoFocus>
           Confirm
         </Button>

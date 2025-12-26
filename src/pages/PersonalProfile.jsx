@@ -17,6 +17,7 @@ import ContactInfoSection from "../components/profile/ContactInfoSection";
 import EmergencyContactsSection from "../components/profile/EmergencyContactsSection";
 import DriverLicenseSection from "../components/profile/DriverLicenseSection";
 import VisaDocumentsSection from "../components/profile/VisaDocumentsSection";
+import { Stack } from '@mui/material';
 
 export default function PersonalProfile() {
   const dispatch = useDispatch();
@@ -127,6 +128,7 @@ export default function PersonalProfile() {
   };
 
   return (
+    <Stack spacing={5} sx={{ p: 4, maxWidth: 900, mx: 'auto', bgcolor: 'transparent' }}>
     <div className="profile-page">
       <EditToolbar
         isEditing={isEditing}
@@ -174,5 +176,6 @@ export default function PersonalProfile() {
         visaDocuments={draft.visaDocuments || []}
       />
     </div>
+    </Stack>
   );
 }

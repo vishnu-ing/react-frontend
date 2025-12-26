@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from "react";
 import { Stack, Typography, Box, Alert, AlertTitle, Button } from '@mui/material';
-import {useNavigate} from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 //import components
 import ProfilePicture from "../components/onboardingcomponents/ProfilePicture";
@@ -124,6 +124,7 @@ function OnboardingApplication() {
     const isLocked = onboardingStatus === 'Pending';
 
     const onFormSubmit = (values) => {
+        console.log("Form Values:", values);
         const submissionData = { ...values };
         submissionData.profilePicture = values.profilePicture?.url || values.profilePicture;
         submissionData.optReceipt = values.optReceipt?.url || values.optReceipt;
@@ -172,8 +173,9 @@ function OnboardingApplication() {
                         </Box>
                     )}
                     <Typography variant="h4" component="h1" sx={{ color: 'black' }}>
-                        Onboarding Application
+                        Welcome to Employee Onboarding!
                     </Typography>
+                    {onboardingStatus === 'Rejected' && <Feedback />}
 
                     {/*personal info*/}
                     <Stack direction="row" spacing={4} alignItems="flex-start">
@@ -189,7 +191,6 @@ function OnboardingApplication() {
                     <ReferralSection isLocked={isLocked} />
                     <EmergencyContactSection isLocked={isLocked} />
                     <DocumentSummarySection />
-                    <Feedback />
                     {!isLocked && (
                         <Button 
                             type="submit" 

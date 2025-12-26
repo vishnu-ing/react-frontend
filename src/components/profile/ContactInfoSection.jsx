@@ -50,7 +50,7 @@ export default function ContactInfoSection({
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6">Contact Info</Typography>
 
       <Stack spacing={2}>
