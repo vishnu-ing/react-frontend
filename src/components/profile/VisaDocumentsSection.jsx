@@ -7,11 +7,7 @@ import {
   Box,
   MenuItem,
 } from "@mui/material";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import DownloadIcon from "@mui/icons-material/Download";
 import { resolveFileUrl } from "../../utils/fileUrl";
-
-
 
 export default function VisaDocumentsSection({
   data,
@@ -22,7 +18,7 @@ export default function VisaDocumentsSection({
   const docs =
     data.visaDocuments && data.visaDocuments.length > 0
       ? data.visaDocuments
-      : [EMPTY_VISA_DOCUMENT];
+      : [];
 
   const updateDoc = (idx, key, value) => {
     const updated = [...docs];
@@ -39,7 +35,7 @@ export default function VisaDocumentsSection({
 
 
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6">Visa Documents</Typography>
 
       <Stack spacing={3}>
@@ -108,7 +104,7 @@ export default function VisaDocumentsSection({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                {isEditing && (
+                {/* {isEditing && (
                   <Button component="label" variant="outlined">
                     Upload
                     <input
@@ -122,7 +118,7 @@ export default function VisaDocumentsSection({
                       }}
                     />
                   </Button>
-                )}
+                )} */}
 
                 {doc.fileUrl && (
                   <Stack direction="row" spacing={2}>

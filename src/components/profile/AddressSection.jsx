@@ -29,7 +29,7 @@ export default function AddressSection({ data, setDraft, isEditing , setAbsolute
     update(key, e.target.value);
   }
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
+    <Paper elevation={2} sx={{ p: 3, m: 2 }}>
       <Typography variant="h6" gutterBottom>
         Address
       </Typography>

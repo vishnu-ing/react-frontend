@@ -92,7 +92,7 @@ function Login() {
   useEffect(() => {
     if (isAuthenticated && user) {
       if (user.onboardingStatus === 'Approved') {
-        navigate('/personal-info');
+        navigate('/profile');
       } else {
         navigate('/onboarding');
       }
