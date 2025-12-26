@@ -5,7 +5,7 @@ import OnboardingApplication from './pages/OnboardingApplication';
 import AuthGuard from './guards/AuthGuard';
 import { authService } from './api/authService';
 import './App.css';
-import Starter from './components/Starter';
+import VisaStatus from "./pages/VisaStatus";
 import Layout from './components/Layout';
 import PersonalProfile from './pages/PersonalProfile';
 import Logout from './pages/Logout';
@@ -34,6 +34,7 @@ function App() {
               element={<FacilityReportDetail />}
             />
             <Route path="/housing/me" element={<HousingDetails />} />
+            <Route path="/visa" element={<VisaStatus />} />
           </Route>
         </Route>
 
