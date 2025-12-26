@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from "react";
 import { Stack, Typography, Box, Alert, AlertTitle, Button } from '@mui/material';
 import {useNavigate, useSearchParams, Navigate} from 'react-router-dom';
+
 //import components
 import ProfilePicture from "../components/onboardingcomponents/ProfilePicture";
 import PersonalInformation from "../components/onboardingcomponents/PersonalInformation";
@@ -134,6 +135,7 @@ function OnboardingApplication() {
     const isLocked = onboardingStatus === 'Pending' || isHrView;
 
     const onFormSubmit = (values) => {
+        console.log("Form Values:", values);
         const submissionData = { ...values };
         submissionData.profilePicture = values.profilePicture?.url || values.profilePicture;
         submissionData.optReceipt = values.optReceipt?.url || values.optReceipt;
