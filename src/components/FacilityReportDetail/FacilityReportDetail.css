@@ -1,0 +1,71 @@
+/* Facility Report Detail Modern UI */
+.facility-detail__container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.facility-detail__content {
+  padding: 32px 24px;
+  position: relative;
+}
+
+.facility-detail__back-btn {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  margin-bottom: 0 !important;
+  z-index: 2;
+}
+
+.facility-detail__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 2.8rem;
+  margin-bottom: 1.2rem;
+}
+
+.facility-detail__section {
+  margin-bottom: 2.2rem;
+  text-align: left;
+}
+
+.facility-detail__comments {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1rem;
+}
+
+.facility-detail__comment {
+  background: #f7f7f7;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ececec;
+}
+
+.facility-detail__comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+
+.facility-detail__comment-form textarea {
+  font-size: 1rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.facility-detail__comment-btn {
+  align-self: flex-end;
+}
+
+.facility__loading {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1.2rem;
+}
