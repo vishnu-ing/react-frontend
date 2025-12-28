@@ -1,4 +1,4 @@
-import { Stack, Typography, RadioGroup, FormControlLabel, Radio, Select, MenuItem, TextField, InputLabel, FormControl } from '@mui/material';
+import { Stack, Typography, RadioGroup, FormControlLabel, Radio, Select, MenuItem, TextField, InputLabel, FormControl, FormHelperText } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import MuiUpload from "../MuiUpload";
@@ -34,10 +34,14 @@ const CitizenStatus = ({ isLocked }) => {
                         name="citizenType"
                         control={control}
                         render={({ field, fieldState: { error } }) => (
-                            <Select {...field} label="Choose your status" disabled={isLocked} required error={!!error} helperText={error?.message}>
-                                <MenuItem value="Green Card">Green Card</MenuItem>
-                                <MenuItem value="Citizen">Citizen</MenuItem>
-                            </Select>
+                            <FormControl fullWidth error={!!error} disabled={isLocked}>
+                                <InputLabel>Choose your status</InputLabel>
+                                <Select {...field} label="Choose your status">
+                                    <MenuItem value="Green Card">Green Card</MenuItem>
+                                    <MenuItem value="Citizen">Citizen</MenuItem>
+                                </Select>
+                                <FormHelperText>{error?.message}</FormHelperText>
+                            </FormControl>
                         )}
                     />
                 </FormControl>

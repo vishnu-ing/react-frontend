@@ -9,7 +9,6 @@ axiosInstance.interceptors.request.use((request) => {
     if (token) {
         request.headers.Authorization = `Bearer ${token}`; //attach to all request
     }
-    // console.log("Token: ", token)
     return request;
 });
 

@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from "react";
 import { Stack, Typography, Box, Alert, AlertTitle, Button } from '@mui/material';
-import { Navigate, useNavigate } from 'react-router-dom';
+import {useNavigate, useSearchParams, Navigate} from 'react-router-dom';
 
 //import components
 import ProfilePicture from "../components/onboardingcomponents/ProfilePicture";
@@ -17,13 +17,21 @@ import DocumentSummarySection from "../components/onboardingcomponents/DocumentS
 import Feedback from "../components/onboardingcomponents/Feedback";
 //import datas
 import { fetchOnboardingData,submitApplication } from '../store/onboardslice/onboardingthunks';
+import { resetOnboardingState } from '../store/onboardslice/onboardingSlice';
 
 function OnboardingApplication() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const [searchParams] = useSearchParams(); //hook to read url
     const authData = useSelector((state) => state.auth);
+    const targetUsername = searchParams.get('username'); 
+    const isHrView = searchParams.get('view') === 'hr';
+    const activeUsername = (isHrView && targetUsername) ? targetUsername : authData?.user?.userName;
+    const incomingToken = searchParams.get('token');
+    if (incomingToken) {
+        localStorage.setItem('token', incomingToken); //save token if logged in from HR
+    }
+    const navigate = useNavigate();
     const { formData, onboardingStatus } = useSelector((state) => state.onboarding);
-    const username = authData?.user?.userName;
     //initialize value for MUI
     const emptyForm = useMemo(() => ({
         firstName: "", lastName: "", middleName: "", preferredName: "",
@@ -40,20 +48,23 @@ function OnboardingApplication() {
     const methods = useForm({ 
         defaultValues: { ...emptyForm, ...formData } 
     });
+    // useeffect to handle data fetching for both normal employee and HR viewing
+    useEffect(() => {
+        if (activeUsername) {
+            dispatch(fetchOnboardingData(activeUsername));
+        }
+        return () => {
+            dispatch(resetOnboardingState());
+        };
+    }, [dispatch, activeUsername]);
 
     const { handleSubmit, reset } = methods;
-    //redirect on approve
+    //redirect on approve and not HR view
     useEffect(() => {
-        if (onboardingStatus === 'Approved') {
-            navigate('/personal-info'); // Replace with your actual profile route path
+        if (onboardingStatus === 'Approved' && !isHrView) {
+            navigate('/personal-info'); 
         }
     }, [onboardingStatus, navigate]);
-    //fetch logged in user data
-    useEffect(() => {
-        if (username) {
-            dispatch(fetchOnboardingData(username));
-        }
-    }, [dispatch, username]);
     //initialize the forms
     useEffect(() => {
         if (formData && Object.keys(formData).length > 0) {
@@ -121,7 +132,7 @@ function OnboardingApplication() {
         }
     }, [formData, reset, emptyForm]);
 
-    const isLocked = onboardingStatus === 'Pending';
+    const isLocked = onboardingStatus === 'Pending' || isHrView;
 
     const onFormSubmit = (values) => {
         console.log("Form Values:", values);
@@ -144,7 +155,6 @@ function OnboardingApplication() {
             }
         }
         delete submissionData.citizenType;
-        console.log("submitting for "+ username);
         dispatch(submitApplication({ userName: username, onboardingdata: submissionData }));
     };
 
