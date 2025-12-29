@@ -28,23 +28,25 @@ const CitizenStatus = ({ isLocked }) => {
             </Stack>
 
             {isCitizen === "Yes" && (
-                <FormControl fullWidth>
-                    <InputLabel>Choose your status</InputLabel>
-                    <Controller
-                        name="citizenType"
-                        control={control}
-                        render={({ field, fieldState: { error } }) => (
-                            <FormControl fullWidth error={!!error} disabled={isLocked}>
-                                <InputLabel>Choose your status</InputLabel>
-                                <Select {...field} label="Choose your status">
-                                    <MenuItem value="Green Card">Green Card</MenuItem>
-                                    <MenuItem value="Citizen">Citizen</MenuItem>
-                                </Select>
-                                <FormHelperText>{error?.message}</FormHelperText>
-                            </FormControl>
-                        )}
-                    />
-                </FormControl>
+                <Controller
+                    name="citizenType"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                        <FormControl fullWidth error={!!error}> 
+                            <InputLabel>Choose your status</InputLabel>
+                            <Select 
+                                {...field} 
+                                label="Choose your status" 
+                                disabled={isLocked} 
+                                required 
+                            >
+                                <MenuItem value="Green Card">Green Card</MenuItem>
+                                <MenuItem value="Citizen">Citizen</MenuItem>
+                            </Select>
+                            <FormHelperText>{error?.message}</FormHelperText>
+                        </FormControl>
+                    )}
+                />
             )}
 
             {/*visa */}
@@ -136,7 +138,7 @@ const CitizenStatus = ({ isLocked }) => {
                                     return new Date(value) >= new Date(visaStart) || "End date cannot be before Start date";
                                 }
                             }}
-                            render={({ field }) => (
+                            render={({ field, fieldState: { error } }) => (
                                 <TextField
                                     {...field}
                                     label="End Date"
@@ -144,6 +146,8 @@ const CitizenStatus = ({ isLocked }) => {
                                     fullWidth
                                     disabled={isLocked}
                                     InputLabelProps={{ shrink: true }}
+                                    error={!!error}
+                                    helperText={error?.message}
                                 />
                             )}
                         />

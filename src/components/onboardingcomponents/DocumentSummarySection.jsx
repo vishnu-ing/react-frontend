@@ -8,7 +8,6 @@ const DocumentSummarySection = () => {
     const profilePic = watch("profilePicture"); 
     const optReceipt = watch("optReceipt");
     const driverLicense = watch("driverlicense.fileUrl");
-    //temp for now might not need when aws server is up
     const handleDownload = async (e, fileUrl, fileName) => {
         e.preventDefault();
         

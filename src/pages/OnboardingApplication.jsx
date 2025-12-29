@@ -2,7 +2,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from "react";
 import { Stack, Typography, Box, Alert, AlertTitle, Button } from '@mui/material';
-import {useNavigate, useSearchParams, Navigate} from 'react-router-dom';
+import {useNavigate, useSearchParams, Navigate, NavLink} from 'react-router-dom';
 
 //import components
 import ProfilePicture from "../components/onboardingcomponents/ProfilePicture";
@@ -135,7 +135,6 @@ function OnboardingApplication() {
     const isLocked = onboardingStatus === 'Pending' || isHrView;
 
     const onFormSubmit = (values) => {
-        console.log("Form Values:", values);
         const submissionData = { ...values };
         submissionData.profilePicture = values.profilePicture?.url || values.profilePicture;
         submissionData.optReceipt = values.optReceipt?.url || values.optReceipt;
@@ -155,11 +154,12 @@ function OnboardingApplication() {
             }
         }
         delete submissionData.citizenType;
-        dispatch(submitApplication({ userName: username, onboardingdata: submissionData }));
+        dispatch(submitApplication({ userName: activeUsername, onboardingdata: submissionData }));
     };
 
     return (
         <FormProvider {...methods}>
+            <Button style={{ color: "black", textDecoration: "none" }} onClick={() => navigate('/logout')} >Log out</Button>
             <form onSubmit={handleSubmit(onFormSubmit)}>
                 <Stack spacing={5} sx={{ p: 4, maxWidth: 900, mx: 'auto', bgcolor: 'transparent' }}>
                     {onboardingStatus !== 'Not Started' && (

@@ -21,7 +21,8 @@ function App() {
         <Route path="/register" element={<Registration />} />
         {/* Protected routes */}
         <Route element={<AuthGuard />}>
-        <Route path="/onboarding" element={<OnboardingApplication />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/onboarding" element={<OnboardingApplication />} />
           <Route element={<Layout />}>
             <Route path="/profile" element={<PersonalProfile />} />
             <Route path="/facility-reports" element={<FacilityReports />} />
@@ -31,7 +32,6 @@ function App() {
             />
             <Route path="/housing/me" element={<HousingDetails />} />
             <Route path="/visa" element={<VisaStatus />} />
-            <Route path="/logout" element={<Logout />} />
           </Route>
         </Route>
 
