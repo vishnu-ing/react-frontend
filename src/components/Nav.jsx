@@ -9,7 +9,7 @@ const Nav = () => {
   const { onboardingStatus, workAuth } = useSelector(
     (state) => state.auth.user
   );
-  if (onboardingStatus !== "Approved") return <Navigate to="/onboarding" replace />;
+  //if (onboardingStatus !== "Approved") return <Navigate to="/onboarding" replace />;
 
   return (
     <Box sx={{ flexGrow: 1 }}>

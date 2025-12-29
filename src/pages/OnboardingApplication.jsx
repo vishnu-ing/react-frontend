@@ -135,6 +135,7 @@ function OnboardingApplication() {
     const isLocked = onboardingStatus === 'Pending' || isHrView;
 
     const onFormSubmit = (values) => {
+        console.log("FORM VALUES:", values);
         const submissionData = { ...values };
         submissionData.profilePicture = values.profilePicture?.url || values.profilePicture;
         submissionData.optReceipt = values.optReceipt?.url || values.optReceipt;
@@ -154,7 +155,7 @@ function OnboardingApplication() {
             }
         }
         delete submissionData.citizenType;
-        dispatch(submitApplication({ userName: username, onboardingdata: submissionData }));
+        dispatch(submitApplication({ userName: activeUsername, onboardingdata: submissionData }));
     };
 
     return (
