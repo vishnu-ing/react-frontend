@@ -135,7 +135,6 @@ function OnboardingApplication() {
     const isLocked = onboardingStatus === 'Pending' || isHrView;
 
     const onFormSubmit = (values) => {
-        console.log("Form Values:", values);
         const submissionData = { ...values };
         submissionData.profilePicture = values.profilePicture?.url || values.profilePicture;
         submissionData.optReceipt = values.optReceipt?.url || values.optReceipt;

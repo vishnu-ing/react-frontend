@@ -1,4 +1,4 @@
-import { Stack, Typography, RadioGroup, FormControlLabel, Radio, TextField } from '@mui/material';
+import { Stack, Typography, RadioGroup, FormControlLabel, Radio, TextField} from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 import MuiUpload from "../MuiUpload";
 import { useState } from 'react';
@@ -27,7 +27,8 @@ const DriverLicense = ({ isLocked }) => {
                         <TextField {...field} label="License Number" required fullWidth disabled={isLocked} error={!!error} helperText={error?.message} />
                     )} />
                     <Controller name="driverlicense.expirationDate" control={control} render={({ field, fieldState: { error } }) => (
-                        <TextField {...field} type="date" label="Expiration Date" required fullWidth disabled={isLocked} error={!!error} helperText={error?.message} />
+                        <TextField {...field} type="date" label="Expiration Date" required fullWidth disabled={isLocked} error={!!error} helperText={error?.message} InputLabelProps={{ shrink: true }} 
+                        value={field.value ? field.value.split('T')[0] : ''}/>
                     )} />
                     <Controller
                         name="driverlicense.fileUrl"
