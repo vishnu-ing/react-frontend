@@ -27,7 +27,13 @@ const FacilityReportDetail = () => {
         const commentsRes = await axiosInstance.get(
           `/facility-reports/${reportId}/comments`
         );
-        setComments(Array.isArray(commentsRes.data) ? commentsRes.data : []);
+        const fetched = Array.isArray(commentsRes.data) ? commentsRes.data : [];
+        fetched.sort((a, b) => {
+          const ta = a?.timestamp ? Date.parse(a.timestamp) : 0;
+          const tb = b?.timestamp ? Date.parse(b.timestamp) : 0;
+          return tb - ta;
+        });
+        setComments(fetched);
       } catch (error) {
         console.error('Error fetching facility report details:', error);
         setReport(null);
@@ -60,7 +66,15 @@ const FacilityReportDetail = () => {
         `/facility-reports/${reportId}/comments`,
         { description: commentInput }
       );
-      setComments([...comments, res.data]);
+      setComments((prev) => {
+        const updated = [res.data, ...prev];
+        updated.sort((a, b) => {
+          const ta = a?.timestamp ? Date.parse(a.timestamp) : 0;
+          const tb = b?.timestamp ? Date.parse(b.timestamp) : 0;
+          return tb - ta;
+        });
+        return updated;
+      });
       setCommentInput('');
     } catch (error) {
       console.error('Error posting comment:', error);
