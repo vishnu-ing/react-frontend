@@ -198,11 +198,27 @@ const HousingDetails = () => {
           variant={!showForm ? 'contained' : 'outlined'}
           color={!showForm ? 'success' : 'secondary'}
           className={`housing-btn report-issue-btn`}
-          onClick={() => setShowForm((v) => !v)}
+          onClick={() => {
+            setShowForm((v) => {
+              if (!v) setSubmitMsg('');
+              return !v;
+            });
+          }}
           style={showForm ? { display: 'none' } : {}}
         >
           Report Facility Issue
         </Button>
+
+        {submitMsg && !showForm && (
+          <div
+            className={`housing-submit-msg${
+              submitMsg.includes('success') ? ' success' : ' error'
+            }`}
+            style={{ marginBottom: 16 }}
+          >
+            {submitMsg}
+          </div>
+        )}
 
         {showForm && (
           <form
@@ -272,7 +288,7 @@ const HousingDetails = () => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color="success"
               disabled={
                 submitting ||
                 !housing ||
@@ -284,16 +300,6 @@ const HousingDetails = () => {
             >
               {submitting ? 'Submitting...' : 'Submit Report'}
             </Button>
-
-            {submitMsg && (
-              <div
-                className={`housing-submit-msg${
-                  submitMsg.includes('success') ? ' success' : ' error'
-                }`}
-              >
-                {submitMsg}
-              </div>
-            )}
           </form>
         )}
       </Paper>

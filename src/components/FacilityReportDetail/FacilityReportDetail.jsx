@@ -8,6 +8,8 @@ import { Paper, Button } from '@mui/material';
 
 const FacilityReportDetail = () => {
   const [comments, setComments] = useState([]);
+  const [commentsPage, setCommentsPage] = useState(1);
+  const COMMENTS_PER_PAGE = 3;
   const [commentInput, setCommentInput] = useState('');
   const [commentLoading, setCommentLoading] = useState(false);
   const { reportId } = useParams();
@@ -63,14 +65,26 @@ const FacilityReportDetail = () => {
         elevation={3}
         className="onboarding-content facility-detail__content"
       >
-        <Button
-          variant="outlined"
-          color="primary"
-          className="facility-detail__back-btn"
-          onClick={() => navigate('/facility-reports')}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            marginTop: '-8px',
+            marginLeft: '-8px',
+            marginBottom: '8px',
+          }}
         >
-          ← Back to Reports
-        </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            className="facility-detail__back-btn"
+            onClick={() => navigate('/facility-reports')}
+            style={{ margin: 0, padding: '8px 16px', minWidth: 0 }}
+          >
+            ← Back to Reports
+          </Button>
+        </div>
         <h2 className="facility-detail__title">{report.title}</h2>
         <div className="facility-detail__section">
           <h3>Description</h3>
@@ -92,29 +106,75 @@ const FacilityReportDetail = () => {
             {comments.length === 0 && (
               <li key="no-comments">No comments yet.</li>
             )}
-            {comments.map((comment, idx) => (
-              <li
-                key={comment._id || comment.id || idx}
-                className="facility-detail__comment"
-              >
-                <div>
-                  <strong>Description:</strong> {comment.description}
-                </div>
-                <div>
-                  <strong>Created By:</strong>{' '}
-                  {authService.getUser()?.userName ||
-                    authService.getUser()?.name ||
-                    'User'}
-                </div>
-                <div>
-                  <strong>Timestamp:</strong>{' '}
-                  {comment.timestamp
-                    ? new Date(comment.timestamp).toLocaleString()
-                    : ''}
-                </div>
-              </li>
-            ))}
+            {comments
+              .slice(
+                (commentsPage - 1) * COMMENTS_PER_PAGE,
+                commentsPage * COMMENTS_PER_PAGE
+              )
+              .map((comment, idx) => (
+                <li
+                  key={comment._id || comment.id || idx}
+                  className="facility-detail__comment"
+                >
+                  <div>
+                    <strong>Description:</strong> {comment.description}
+                  </div>
+                  <div>
+                    <strong>Created By:</strong>{' '}
+                    {authService.getUser()?.userName ||
+                      authService.getUser()?.name ||
+                      'User'}
+                  </div>
+                  <div>
+                    <strong>Timestamp:</strong>{' '}
+                    {comment.timestamp
+                      ? new Date(comment.timestamp).toLocaleString()
+                      : ''}
+                  </div>
+                </li>
+              ))}
           </ul>
+          {comments.length > COMMENTS_PER_PAGE && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 8,
+                margin: '12px 0',
+              }}
+            >
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setCommentsPage((p) => Math.max(1, p - 1))}
+                disabled={commentsPage === 1}
+              >
+                Previous
+              </Button>
+              <span style={{ alignSelf: 'center' }}>
+                Page {commentsPage} of{' '}
+                {Math.ceil(comments.length / COMMENTS_PER_PAGE)}
+              </span>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() =>
+                  setCommentsPage((p) =>
+                    Math.min(
+                      Math.ceil(comments.length / COMMENTS_PER_PAGE),
+                      p + 1
+                    )
+                  )
+                }
+                disabled={
+                  commentsPage ===
+                  Math.ceil(comments.length / COMMENTS_PER_PAGE)
+                }
+              >
+                Next
+              </Button>
+            </div>
+          )}
           <form
             className="facility-detail__comment-form"
             onSubmit={handleAddComment}
@@ -129,7 +189,7 @@ const FacilityReportDetail = () => {
             <Button
               type="submit"
               variant="contained"
-              color="secondary"
+              color="success"
               disabled={commentLoading || !commentInput.trim()}
               className="facility-detail__comment-btn"
             >
