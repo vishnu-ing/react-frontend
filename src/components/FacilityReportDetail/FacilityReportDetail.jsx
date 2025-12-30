@@ -16,6 +16,7 @@ const FacilityReportDetail = () => {
   const navigate = useNavigate();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -34,6 +35,19 @@ const FacilityReportDetail = () => {
         setLoading(false);
       }
     };
+    // set current user email (try authService, then localStorage fallback)
+    try {
+      const userFromService =
+        authService.getCurrentUser && authService.getCurrentUser();
+      const userFromStorage = JSON.parse(
+        localStorage.getItem('user') || 'null'
+      );
+      const email = userFromService?.email || userFromStorage?.email || '';
+      setCurrentUserEmail(email);
+    } catch (e) {
+      setCurrentUserEmail('');
+    }
+
     fetchReport();
   }, [reportId]);
 
@@ -111,28 +125,57 @@ const FacilityReportDetail = () => {
                 (commentsPage - 1) * COMMENTS_PER_PAGE,
                 commentsPage * COMMENTS_PER_PAGE
               )
-              .map((comment, idx) => (
-                <li
-                  key={comment._id || comment.id || idx}
-                  className="facility-detail__comment"
-                >
-                  <div>
-                    <strong>Description:</strong> {comment.description}
-                  </div>
-                  <div>
-                    <strong>Created By:</strong>{' '}
-                    {authService.getUser()?.userName ||
-                      authService.getUser()?.name ||
-                      'User'}
-                  </div>
-                  <div>
-                    <strong>Timestamp:</strong>{' '}
-                    {comment.timestamp
-                      ? new Date(comment.timestamp).toLocaleString()
-                      : ''}
-                  </div>
-                </li>
-              ))}
+              .map((comment, idx) => {
+                const createdByEmail = (comment.createdBy?.email || '')
+                  .trim()
+                  .toLowerCase();
+                const userEmail = (currentUserEmail || '').trim().toLowerCase();
+                console.log(
+                  'Comparing comment email ->',
+                  createdByEmail,
+                  'with current user ->',
+                  userEmail
+                );
+                return (
+                  <li
+                    key={comment._id || comment.id || idx}
+                    className="facility-detail__comment"
+                  >
+                    <div>
+                      <strong>Description:</strong> {comment.description}
+                    </div>
+                    <div>
+                      <strong>Created By:</strong>{' '}
+                      {createdByEmail
+                        ? userEmail
+                          ? createdByEmail === userEmail
+                            ? comment.createdBy?.firstName ||
+                              comment.createdBy?.lastName
+                              ? `${comment.createdBy?.firstName || ''} ${
+                                  comment.createdBy?.lastName || ''
+                                }`.trim()
+                              : comment.createdBy?.userName || 'User'
+                            : 'HR'
+                          : // userEmail unknown, fall back to role when available
+                          comment.createdBy?.role === 'HR'
+                          ? 'HR'
+                          : comment.createdBy?.firstName ||
+                            comment.createdBy?.lastName
+                          ? `${comment.createdBy?.firstName || ''} ${
+                              comment.createdBy?.lastName || ''
+                            }`.trim()
+                          : comment.createdBy?.userName || 'User'
+                        : comment.createdBy?.userName || 'User'}
+                    </div>
+                    <div>
+                      <strong>Timestamp:</strong>{' '}
+                      {comment.timestamp
+                        ? new Date(comment.timestamp).toLocaleString()
+                        : ''}
+                    </div>
+                  </li>
+                );
+              })}
           </ul>
           {comments.length > COMMENTS_PER_PAGE && (
             <div
