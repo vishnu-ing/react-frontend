@@ -18,6 +18,7 @@ import Feedback from "../components/onboardingcomponents/Feedback";
 //import datas
 import { fetchOnboardingData,submitApplication } from '../store/onboardslice/onboardingthunks';
 import { resetOnboardingState } from '../store/onboardslice/onboardingSlice';
+import { setCredentials } from '../store/authSlice/auth.slice';
 
 function OnboardingApplication() {
     const dispatch = useDispatch();
@@ -62,9 +63,14 @@ function OnboardingApplication() {
     //redirect on approve and not HR view
     useEffect(() => {
         if (onboardingStatus === 'Approved' && !isHrView) {
+            const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            const updatedUser = { ...currentUser, onboardingStatus: 'Approved' };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            const token = localStorage.getItem('token');
+            dispatch(setCredentials({ token, user: updatedUser }));
             navigate('/personal-info'); 
         }
-    }, [onboardingStatus, navigate]);
+    }, [onboardingStatus, navigate, isHrView,dispatch]);
     //initialize the forms
     useEffect(() => {
         if (formData && Object.keys(formData).length > 0) {
@@ -132,7 +138,11 @@ function OnboardingApplication() {
         }
     }, [formData, reset, emptyForm]);
 
-    const isLocked = onboardingStatus === 'Pending' || isHrView;
+    const isLocked = onboardingStatus === 'Pending' || isHrView;   
+
+    const handlereset = ()=>{
+        reset(emptyForm);
+    }
 
     const onFormSubmit = (values) => {
         const submissionData = { ...values };
@@ -159,8 +169,20 @@ function OnboardingApplication() {
 
     return (
         <FormProvider {...methods}>
-            <Button style={{ color: "black", textDecoration: "none" }} onClick={() => navigate('/logout')} >Log out</Button>
-            <form onSubmit={handleSubmit(onFormSubmit)}>
+            <Stack direction="row" spacing={2} justifyContent="center">
+                <Button style={{ color: "black", textDecoration: "none" }} onClick={() => navigate('/logout')} >Log out</Button>
+                {!isLocked && (
+                                <Button 
+                                    type="button"
+                                    color="black" 
+                                    onClick={handlereset}
+                                    sx={{ py: 2 }}
+                                >
+                                    Reset Form
+                                </Button>
+                )}
+            </Stack>
+            <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
                 <Stack spacing={5} sx={{ p: 4, maxWidth: 900, mx: 'auto', bgcolor: 'transparent' }}>
                     {onboardingStatus !== 'Not Started' && (
                         <Box sx={{ mb: 3 }}>

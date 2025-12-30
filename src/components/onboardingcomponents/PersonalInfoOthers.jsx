@@ -31,7 +31,7 @@ const PersonalInfoOthers = ({ isLocked }) => {
             </Grid>
             <Grid size={4}>
                 <Controller name="DOB" control={control} rules={{ required: "Required" }} render={({ field, fieldState: { error } }) => (
-                    <TextField {...field} type="date" required label="Date of Birth" disabled={isLocked} fullWidth error={!!error} helperText={error?.message} />
+                    <TextField {...field} type="date" required label="Date of Birth" disabled={isLocked} fullWidth error={!!error} helperText={error?.message} InputLabelProps={{ shrink: true }} />
                 )} />
             </Grid>
             <Grid size={4}>
