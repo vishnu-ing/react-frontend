@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from "react";
-import { Stack, Typography, Box, Alert, AlertTitle, Button } from '@mui/material';
+import { Stack, Typography, Box, Alert, AlertTitle, Button, TextField } from '@mui/material';
 import {useNavigate, useSearchParams, Navigate, NavLink} from 'react-router-dom';
 
 //import components
@@ -59,7 +59,7 @@ function OnboardingApplication() {
         };
     }, [dispatch, activeUsername]);
 
-    const { handleSubmit, reset } = methods;
+    const { handleSubmit, reset, register } = methods;
     //redirect on approve and not HR view
     useEffect(() => {
         if (onboardingStatus === 'Approved' && !isHrView) {
@@ -214,6 +214,8 @@ function OnboardingApplication() {
                         <ProfilePicture isLocked={isLocked} />
                         <PersonalInformation isLocked={isLocked} />
                     </Stack>
+
+                    <TextField {...register("email")} disabled={true} fullWidth variant="outlined" />
 
                     {/*section components */}
                     <AddressSection isLocked={isLocked} />
