@@ -11,6 +11,8 @@ const FacilityReportsPage = () => {
   const location = useLocation();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const REPORTS_PER_PAGE = 3;
 
   // Get userId from query params or logged-in user
   const userIdFromQuery = new URLSearchParams(location.search).get('userId');
@@ -43,34 +45,56 @@ const FacilityReportsPage = () => {
     );
 
   // Filter reports to only those created by the logged-in user
-  const filteredReports = reports.filter((report) => {
-    // Support both string and object for createdBy/reportedBy
-    const createdBy = report.createdBy || report.reportedBy;
-    if (!createdBy || !userId) return false;
-    if (typeof createdBy === 'object') {
-      return (
-        createdBy.userId === userId ||
-        createdBy.id === userId ||
-        createdBy._id === userId
-      );
-    }
-    return String(createdBy) === String(userId);
-  });
+  const filteredReports = reports
+    .filter((report) => {
+      // Support both string and object for createdBy/reportedBy
+      const createdBy = report.createdBy || report.reportedBy;
+      if (!createdBy || !userId) return false;
+      if (typeof createdBy === 'object') {
+        return (
+          createdBy.userId === userId ||
+          createdBy.id === userId ||
+          createdBy._id === userId
+        );
+      }
+      return String(createdBy) === String(userId);
+    })
+    .sort((a, b) => {
+      const aTime = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+      const bTime = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+      return bTime - aTime;
+    });
+  const paginatedReports = filteredReports.slice(
+    (page - 1) * REPORTS_PER_PAGE,
+    page * REPORTS_PER_PAGE
+  );
 
   return (
     <div className="onboarding-container facility__container">
       <Paper elevation={3} className="onboarding-content facility__content">
-        <Button
-          variant="outlined"
-          color="primary"
-          className="facility__back-btn"
-          onClick={() => navigate('/housing/me')}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            marginTop: '-32px',
+            marginLeft: '-32px',
+            marginBottom: '8px',
+          }}
         >
-          Back to Housing
-        </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            className="facility__back-btn"
+            onClick={() => navigate('/housing/me')}
+            style={{ margin: 0, padding: '0px 2px', minWidth: 0 }}
+          >
+            Back to Housing
+          </Button>
+        </div>
         <h2>Facility Reports</h2>
         <div className="facility__reports">
-          {filteredReports.map((report) => (
+          {paginatedReports.map((report) => (
             <Paper
               key={report._id}
               elevation={2}
@@ -83,9 +107,9 @@ const FacilityReportsPage = () => {
                 {report.reportedBy?.userName || 'Unknown User'}
               </p>
               <p>
-                <strong>TimeStamp:</strong>{' '}
-                {report.createdAt
-                  ? new Date(report.createdAt).toLocaleString()
+                <strong>Last Updated:</strong>{' '}
+                {report.updatedAt
+                  ? new Date(report.updatedAt).toLocaleString()
                   : 'N/A'}
               </p>
               <p>
@@ -102,6 +126,46 @@ const FacilityReportsPage = () => {
             </Paper>
           ))}
         </div>
+        {filteredReports.length > REPORTS_PER_PAGE && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 8,
+              margin: '24px 0 0 0',
+            }}
+          >
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              Previous
+            </Button>
+            <span style={{ alignSelf: 'center' }}>
+              Page {page} of{' '}
+              {Math.ceil(filteredReports.length / REPORTS_PER_PAGE)}
+            </span>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() =>
+                setPage((p) =>
+                  Math.min(
+                    Math.ceil(filteredReports.length / REPORTS_PER_PAGE),
+                    p + 1
+                  )
+                )
+              }
+              disabled={
+                page === Math.ceil(filteredReports.length / REPORTS_PER_PAGE)
+              }
+            >
+              Next
+            </Button>
+          </div>
+        )}
       </Paper>
     </div>
   );
